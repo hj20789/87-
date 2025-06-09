@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红楼梦电子版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000', // 深红色
+                        secondary: '#D4AF37', // 金色
+                        paper: '#F5F1E6', // 纸张色
+                        leather: '#8B4513', // 皮革色
+                        pageShadow: 'rgba(0, 0, 0, 0.15)',
+                    },
+                    fontFamily: {
+                        serif: ['SimSun', 'serif'], // 宋体
+                        display: ['STKaiti', 'KaiTi', 'serif'], // 楷体
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .book-shadow {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            }
+            
+            .book-edge {
+                background-image: linear-gradient(90deg, 
+                    rgba(139, 69, 19, 0.8) 0%, 
+                    rgba(139, 69, 19, 0.6) 2%, 
+                    rgba(139, 69, 19, 0.8) 4%, 
+                    rgba(139, 69, 19, 0.6) 6%, 
+                    rgba(139, 69, 19, 0.8) 8%, 
+                    rgba(139, 69, 19, 0.6) 10%, 
+                    rgba(139, 69, 19, 0.8) 12%, 
+                    rgba(139, 69, 19, 0.6) 14%, 
+                    rgba(139, 69, 19, 0.8) 16%, 
+                    rgba(139, 69, 19, 0.6) 18%, 
+                    rgba(139, 69, 19, 0.8) 20%, 
+                    rgba(139, 69, 19, 0.6) 22%, 
+                    rgba(139, 69, 19, 0.8) 24%, 
+                    rgba(139, 69, 19, 0.6) 26%, 
+                    rgba(139, 69, 19, 0.8) 28%, 
+                    rgba(139, 69, 19, 0.6) 30%, 
+                    rgba(139, 69, 19, 0.8) 32%, 
+                    rgba(139, 69, 19, 0.6) 34%, 
+                    rgba(139, 69, 19, 0.8) 36%, 
+                    rgba(139, 69, 19, 0.6) 38%, 
+                    rgba(139, 69, 19, 0.8) 40%, 
+                    rgba(139, 69, 19, 0.6) 42%, 
+                    rgba(139, 69, 19, 0.8) 44%, 
+                    rgba(139, 69, 19, 0.6) 46%, 
+                    rgba(139, 69, 19, 0.8) 48%, 
+                    rgba(139, 69, 19, 0.6) 50%, 
+                    rgba(139, 69, 19, 0.8) 52%, 
+                    rgba(139, 69, 19, 0.6) 54%, 
+                    rgba(139, 69, 19, 0.8) 56%, 
+                    rgba(139, 69, 19, 0.6) 58%, 
+                    rgba(139, 69, 19, 0.8) 60%, 
+                    rgba(139, 69, 19, 0.6) 62%, 
+                    rgba(139, 69, 19, 0.8) 64%, 
+                    rgba(139, 69, 19, 0.6) 66%, 
+                    rgba(139, 69, 19, 0.8) 68%, 
+                    rgba(139, 69, 19, 0.6) 70%, 
+                    rgba(139, 69, 19, 0.8) 72%, 
+                    rgba(139, 69, 19, 0.6) 74%, 
+                    rgba(139, 69, 19, 0.8) 76%, 
+                    rgba(139, 69, 19, 0.6) 78%, 
+                    rgba(139, 69, 19, 0.8) 80%, 
+                    rgba(139, 69, 19, 0.6) 82%, 
+                    rgba(139, 69, 19, 0.8) 84%, 
+                    rgba(139, 69, 19, 0.6) 86%, 
+                    rgba(139, 69, 19, 0.8) 88%, 
+                    rgba(139, 69, 19, 0.6) 90%, 
+                    rgba(139, 69, 19, 0.8) 92%, 
+                    rgba(139, 69, 19, 0.6) 94%, 
+                    rgba(139, 69, 19, 0.8) 96%, 
+                    rgba(139, 69, 19, 0.6) 98%, 
+                    rgba(139, 69, 19, 0.8) 100%
+                );
+            }
+            
+            .page-turning {
+                transform-style: preserve-3d;
+                transform-origin: left center;
+                transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+            }
+            
+            .page-turning:hover {
+                cursor: pointer;
+            }
+            
+            .page-front {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                backface-visibility: hidden;
+                transform: rotateY(0deg);
+            }
+            
+            .page-back {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                backface-visibility: hidden;
+                transform: rotateY(180deg);
+            }
+            
+            .shadow-effect {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to right, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 100%);
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            
+            .page-turning:hover .shadow-effect {
+                opacity: 0.7;
+            }
+            
+            .page-number {
+                position: absolute;
+                bottom: 20px;
+                font-size: 14px;
+                color: rgba(0, 0, 0, 0.5);
+            }
+            
+            .page-number.left {
+                left: 40px;
+            }
+            
+            .page-number.right {
+                right: 40px;
+            }
+            
+            .book-title {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            
+            .page-content {
+                overflow-y: auto;
+                max-height: 100%;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+            }
+            
+            .page-content::-webkit-scrollbar {
+                width: 4px;
+            }
+            
+            .page-content::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            
+            .page-content::-webkit-scrollbar-thumb {
+                background-color: rgba(0, 0, 0, 0.2);
+                border-radius: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-center justify-center p-4 overflow-hidden">
+    <!-- 书籍容器 -->
+    <div id="book-container" class="relative perspective-2000 w-full max-w-5xl aspect-[4/3] mx-auto">
+        <!-- 书籍主体 -->
+        <div id="book" class="relative w-full h-full transform-gpu transition-all duration-500">
+            <!-- 左侧封面 -->
+            <div id="cover" class="absolute w-1/2 h-full left-0 bg-leather flex items-center justify-center overflow-hidden book-shadow">
+                <div class="relative w-full h-full flex flex-col items-center justify-center p-8">
+                    <div class="absolute inset-0 bg-[url('https://picsum.photos/seed/hongloumeng/800/1200')] bg-cover bg-center opacity-20"></div>
+                    <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-display text-secondary font-bold mb-4 book-title">红楼梦</h1>
+                    <p class="text-[clamp(1rem,2vw,1.5rem)] font-display text-secondary/80">曹雪芹 著</p>
+                    <div class="absolute bottom-8 text-secondary/60 text-sm">
+                        <p>87版电视剧红楼梦</p>
+                        <p>电子版</p>
+                    </div>
+                </div>
+                <div class="shadow-effect"></div>
+            </div>
+            
+            <!-- 书脊 -->
+            <div class="absolute w-4 h-full left-1/2 -translate-x-1/2 bg-leather book-edge z-10"></div>
+            
+            <!-- 右侧封面 -->
+            <div id="back-cover" class="absolute w-1/2 h-full right-0 bg-leather book-shadow flex items-center justify-center">
+                <div class="w-full h-full flex items-center justify-center">
+                    <div class="w-2/3 h-2/3 border-2 border-secondary/30 rounded-lg flex items-center justify-center">
+                        <p class="text-secondary/40 text-center font-serif">
+                            满纸荒唐言<br>
+                            一把辛酸泪<br>
+                            都云作者痴<br>
+                            谁解其中味
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 书页 -->
+            <div id="pages-container" class="absolute w-full h-full">
+                <!-- 第一页 -->
+                <div class="page-turning absolute w-1/2 h-full right-0" data-page="1">
+                    <div class="page-front bg-paper h-full p-8 book-shadow">
+                        <div class="page-content h-full">
+                            <h2 class="text-xl font-bold text-center mb-6 font-display">红楼梦</h2>
+                            <p class="mb-4 leading-relaxed">
+                                《红楼梦》，中国古典四大名著之首，清代作家曹雪芹创作的章回体长篇小说。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                小说以贾、史、王、薛四大家族的兴衰为背景，以贾宝玉与林黛玉、薛宝钗的爱情婚姻悲剧为主线，从多个角度描写了18世纪上半叶中国封建社会的生活百态。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                87版电视剧《红楼梦》是中央电视台和中国电视剧制作中心根据古典文学名著《红楼梦》摄制的一部古装连续剧，由王扶林导演，周雷、刘耕路、周岭编剧，陈晓旭、欧阳奋强等主演。
+                            </p>
+                            <div class="mt-6 flex justify-center">
+                                <img src="https://picsum.photos/seed/hongloumeng1/400/300" alt="红楼梦剧照" class="w-3/4 h-auto rounded shadow-md">
+                            </div>
+                        </div>
+                        <span class="page-number right">1</span>
+                    </div>
+                    <div class="page-back bg-paper h-full p-8 book-shadow">
+                        <div class="page-content h-full">
+                            <h2 class="text-xl font-bold text-center mb-6 font-display">第一回 甄士隐梦幻识通灵 贾雨村风尘怀闺秀</h2>
+                            <p class="mb-4 leading-relaxed">
+                                此开卷第一回也。作者自云：因曾历过一番梦幻之后，故将真事隐去，而借"通灵"之说，撰此《石头记》一书也。故曰"甄士隐"云云。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                列位看官：你道此书从何而来？说起根由虽近荒唐，细按则深有趣味。待在下将此来历注明，方使阅者了然不惑。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                原来女娲氏炼石补天之时，于大荒山无稽崖练成高经十二丈，方经二十四丈顽石三万六千五百零一块。娲皇氏只用了三万六千五百块，只单单剩了一块未用，便弃在此山青埂峰下。
+                            </p>
+                            <div class="mt-6 flex justify-center">
+                                <img src="https://picsum.photos/seed/hongloumeng2/400/300" alt="红楼梦剧照" class="w-3/4 h-auto rounded shadow-md">
+                            </div>
+                        </div>
+                        <span class="page-number left">2</span>
+                    </div>
+                    <div class="shadow-effect"></div>
+                </div>
+                
+                <!-- 第二页 -->
+                <div class="page-turning absolute w-1/2 h-full right-0 opacity-0" data-page="2">
+                    <div class="page-front bg-paper h-full p-8 book-shadow">
+                        <div class="page-content h-full">
+                            <h2 class="text-xl font-bold text-center mb-6 font-display">第二回 贾夫人仙逝扬州城 冷子兴演说荣国府</h2>
+                            <p class="mb-4 leading-relaxed">
+                                却说封肃因听见公差传唤，忙出来陪笑启问。那些人只嚷："快请出甄爷来！"封肃忙陪笑道："小人姓封，并不姓甄。只有当日小婿姓甄，今已出家一二年了，不知可是问他？"
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                那些公人道："我们也不知什么'真''假'，因奉太爷之命来问，他既是你女婿，便带了你去亲见太爷面禀，省得乱跑。"说着，不容封肃多言，大家推拥他去了。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                封家人个个惊慌，不知何兆。那天约二更时，只见封肃方回来，欢天喜地。众人忙问端的。他乃说道："原来本府新升的太爷姓贾名化，本贯胡州人氏，曾与女婿旧日相交。方才在咱门前过去，因见娇杏那丫头买线，所以他只当女婿移住于此。我一一将原故回明，那太爷倒伤感叹息了一回；又问外孙女儿，我说看灯丢了。太爷说：'不妨，我自使番役务必探访回来。'说了一回话，临走倒送了我二两银子。"
+                            </p>
+                            <div class="mt-6 flex justify-center">
+                                <img src="https://picsum.photos/seed/hongloumeng3/400/300" alt="红楼梦剧照" class="w-3/4 h-auto rounded shadow-md">
+                            </div>
+                        </div>
+                        <span class="page-number right">3</span>
+                    </div>
+                    <div class="page-back bg-paper h-full p-8 book-shadow">
+                        <div class="page-content h-full">
+                            <h2 class="text-xl font-bold text-center mb-6 font-display">第三回 贾雨村夤缘复旧职 林黛玉抛父进京都</h2>
+                            <p class="mb-4 leading-relaxed">
+                                却说黛玉自那日弃舟登岸时，便有荣国府打发了轿子并拉行李的车辆久候了。这林黛玉常听得母亲说过，他外祖母家与别家不同。他近日所见的这几个三等仆妇，吃穿用度，已是不凡了，何况今至其家。因此步步留心，时时在意，不肯轻易多说一句话，多行一步路，惟恐被人耻笑了他去。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                自上了轿，进入城中从纱窗向外瞧了一瞧，其街市之繁华，人烟之阜盛，自与别处不同。又行了半日，忽见街北蹲着两个大石狮子，三间兽头大门，门前列坐着十来个华冠丽服之人。正门却不开，只有东西两角门有人出入。正门之上有一匾，匾上大书"敕造宁国府"五个大字。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                黛玉想道：这必是外祖之长房了。想着，又往西行，不多远，照样也是三间大门，方是荣国府了。却不进正门，只进了西边角门。那轿夫抬进去，走了一射之地，将转弯时，便歇下退出去了。后面的婆子们已都下了轿，赶上前来。另换了三四个衣帽周全十七八岁的小厮上来，复抬起轿子。众婆子步下围随至一垂花门前落下。
+                            </p>
+                            <div class="mt-6 flex justify-center">
+                                <img src="https://picsum.photos/seed/hongloumeng4/400/300" alt="红楼梦剧照" class="w-3/4 h-auto rounded shadow-md">
+                            </div>
+                        </div>
+                        <span class="page-number left">4</span>
+                    </div>
+                    <div class="shadow-effect"></div>
+                </div>
+                
+                <!-- 第三页 -->
+                <div class="page-turning absolute w-1/2 h-full right-0 opacity-0" data-page="3">
+                    <div class="page-front bg-paper h-full p-8 book-shadow">
+                        <div class="page-content h-full">
+                            <h2 class="text-xl font-bold text-center mb-6 font-display">第四回 薄命女偏逢薄命郎 葫芦僧乱判葫芦案</h2>
+                            <p class="mb-4 leading-relaxed">
+                                却说黛玉同姊妹们至王夫人处，见王夫人与兄嫂处的来使计议家务，又说姨母家遭人命官司等语。因见王夫人事情冗杂，姊妹们遂出来，至寡嫂李氏房中来了。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                原来这李氏即贾珠之妻。珠虽夭亡，幸存一子，取名贾兰，今方五岁，已入学攻书。这李氏亦系金陵名宦之女，父名李守中，曾为国子监祭酒，族中男女无有不诵诗读书者。至李守中继承以来，便说"女子无才便有德"，故生了李氏时，便不十分令其读书，只不过将些《女四书》《列女传》《贤媛集》等三四种书，使他认得几个字，记得前朝这几个贤女便罢了，却只以纺绩井臼为要，因取名为李纨，字宫裁。因此这李纨虽青春丧偶，居家处膏粱锦绣之中，竟如槁木死灰一般，一概无见无闻，惟知侍亲养子，外则陪侍小姑等针黹诵读而已。
+                            </p>
+                            <div class="mt-6 flex justify-center">
+                                <img src="https://picsum.photos/seed/hongloumeng5/400/300" alt="红楼梦剧照" class="w-3/4 h-auto rounded shadow-md">
+                            </div>
+                        </div>
+                        <span class="page-number right">5</span>
+                    </div>
+                    <div class="page-back bg-paper h-full p-8 book-shadow">
+                        <div class="page-content h-full">
+                            <h2 class="text-xl font-bold text-center mb-6 font-display">第五回 游幻境指迷十二钗 饮仙醪曲演红楼梦</h2>
+                            <p class="mb-4 leading-relaxed">
+                                第四回中既将薛家母子在荣府内寄居等事略已表明，此回则暂不能写矣。如今且说林黛玉自在荣府以来，贾母万般怜爱，寝食起居，一如宝玉，迎春、探春、惜春三个亲孙女倒且靠后；便是宝玉和黛玉二人之亲密友爱处，亦自较别个不同，日则同行同坐，夜则同息同止，真是言和意顺，略无参商。不想如今忽然来了一个薛宝钗，年岁虽大不多，然品格端方，容貌丰美，人多谓黛玉所不及。而且宝钗行为豁达，随分从时，不比黛玉孤高自许，目无下尘，故比黛玉大得下人之心。便是那些小丫头子们，亦多喜与宝钗去顽。因此黛玉心中便有些悒郁不忿之意，宝钗却浑然不觉。
+                            </p>
+                            <p class="mb-4 leading-relaxed">
+                                那宝玉亦在孩提之间，况自天性所禀来的一片愚拙偏僻，视姊妹弟兄皆出一意，并无亲疏远近之别。其中因与黛玉同随贾母一处坐卧，故略比别个姊妹熟惯些。既熟惯，则更觉亲密；既亲密，则不免一时有求全之毁，不虞之隙。这日不知为何，他二人言语有些不合起来，黛玉又气的独在房中垂泪，宝玉又自悔言语冒撞，前去俯就，那黛玉方渐渐的回转来。
+                            </p>
+                            <div class="mt-6 flex justify-center">
+                                <img src="https://picsum.photos/seed/hongloumeng6/400/300" alt="红楼梦剧照" class="w-3/4 h-auto rounded shadow-md">
+                            </div>
+                        </div>
+                        <span class="page-number left">6</span>
+                    </div>
+                    <div class="shadow-effect"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 控制按钮 -->
+    <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-20 flex space-x-4">
+        <button id="prev-btn" class="bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+            <i class="fa fa-arrow-left mr-2"></i>上一页
+        </button><!--
+        <button id="next-btn" class="bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300">
+            下一页<i class="fa fa-arrow-right ml-2"></i>
+        </button>-->
+    </div>
+    
+    <!-- 页面指示器 -->
+    <div class="fixed top-6 left-1/2 transform -translate-x-1/2 z-20 text-white bg-black/50 px-4 py-2 rounded-full">
+        <span id="page-indicator">第 1 页 / 共 6 页</span>
+    </div>
+    
+    <script>
+        // 书籍翻页逻辑
+        document.addEventListener('DOMContentLoaded', () => {
+            const book = document.getElementById('book');
+            const cover = document.getElementById('cover');
+            const pages = document.querySelectorAll('.page-turning');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const pageIndicator = document.getElementById('page-indicator');
+            
+            let currentPage = 0;
+            const totalPages = pages.length;
+            
+            // 初始化页面状态
+            function initPages() {
+                pages.forEach((page, index) => {
+                    if (index === 0) {
+                        page.style.opacity = '1';
+                    } else {
+                        page.style.opacity = '0';
+                    }
+                });
+                
+                updatePageIndicator();
+            }
+            
+            // 更新页面指示器
+            function updatePageIndicator() {
+                const displayedPage = currentPage * 2 + 1;
+                pageIndicator.textContent = `第 ${displayedPage} 页 / 共 ${totalPages * 2} 页`;
+                
+                // 更新按钮状态
+                prevBtn.disabled = currentPage === 0;
+                nextBtn.disabled = currentPage === totalPages - 1;
+            }
+            
+            // 翻到下一页
+            function turnToNextPage() {
+                if (currentPage < totalPages - 1) {
+                    const currentPageElement = pages[currentPage];
+                    const nextPageElement = pages[currentPage + 1];
+                    
+                    // 显示下一页
+                    nextPageElement.style.opacity = '1';
+                    
+                    // 添加翻页动画
+                    currentPageElement.style.transform = 'rotateY(-180deg)';
+                    
+                    // 更新当前页
+                    currentPage++;
+                    updatePageIndicator();
+                    
+                    // 翻到最后一页时隐藏下一页按钮
+                    if (currentPage === totalPages - 1) {
+                        nextBtn.disabled = true;
+                    }
+                    
+                    // 确保封面不会再被点击
+                    cover.style.pointerEvents = 'none';
+                }
+            }
+            
+            // 翻到上一页
+            function turnToPrevPage() {
+                if (currentPage > 0) {
+                    const currentPageElement = pages[currentPage];
+                    const prevPageElement = pages[currentPage - 1];
+                    
+                    // 移除翻页动画
+                    prevPageElement.style.transform = 'rotateY(0deg)';
+                    
+                    // 延迟隐藏当前页
+                    setTimeout(() => {
+                        currentPageElement.style.opacity = '0';
+                    }, 400);
+                    
+                    // 更新当前页
+                    currentPage--;
+                    updatePageIndicator();
+                    
+                    // 如果回到第一页，允许封面点击
+                    if (currentPage === 0) {
+                        cover.style.pointerEvents = 'auto';
+                    }
+                }
+            }
+            
+            // 为封面添加点击事件
+            cover.addEventListener('click', turnToNextPage);
+            
+            // 为页面添加点击事件
+            pages.forEach(page => {
+                page.addEventListener('click', (e) => {
+                    // 只有当点击右侧页面时才翻页
+                    if (e.offsetX > page.offsetWidth / 2) {
+                        turnToNextPage();
+                    }
+                });
+            });
+            
+            // 为按钮添加点击事件
+            prevBtn.addEventListener('click', turnToPrevPage);
+            nextBtn.addEventListener('click', turnToNextPage);
+            
+            // 键盘导航
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    turnToNextPage();
+                } else if (e.key === 'ArrowLeft') {
+                    turnToPrevPage();
+                }
+            });
+            
+            // 初始化
+            initPages();
+        });
+    </script>
+</body>
+</html>

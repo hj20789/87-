@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>87版红楼梦互动游戏</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind CSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000', // 深红色，代表古典与华丽
+                        secondary: '#D4AF37', // 金色，代表富贵
+                        accent: '#FFD700', // 亮金色
+                        dark: '#2D1400', // 深棕色
+                    },
+                    fontFamily: {
+                        serif: ['SimSun', 'serif'], // 使用宋体增强古典感
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 
+                             0 0 10px rgba(255, 215, 0, 0.5);
+            }
+            
+            .text-stroke {
+                -webkit-text-stroke: 1px rgba(255, 255, 255, 0.7);
+                text-stroke: 1px rgba(255, 255, 255, 0.7);
+            }
+            
+            .gold-gradient {
+                background: linear-gradient(
+                    45deg, 
+                    #D4AF37, 
+                    #FFD700, 
+                    #D4AF37, 
+                    #FFD700, 
+                    #D4AF37
+                );
+                background-size: 400% 400%;
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                animation: goldShimmer 3s ease infinite;
+            }
+            
+            .float-animation {
+                animation: float 6s ease-in-out infinite;
+            }
+            
+            .push-animation {
+                animation: push 1s ease-out forwards;
+            }
+            
+            .star {
+                position: absolute;
+                background-color: rgba(255, 215, 0, 0.8);
+                border-radius: 50%;
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+                animation: twinkle 5s infinite;
+            }
+            
+            .fade-in {
+                animation: fadeIn 2s ease-out forwards;
+            }
+        }
+        
+        @keyframes goldShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes push {
+            0% { 
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            70% { 
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.3; transform: scale(0.8); }
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-dark min-h-screen overflow-hidden flex items-center justify-center">
+    <!-- 背景星粒容器 -->
+    <div id="stars-container" class="fixed inset-0 z-0"></div>
+    
+    <!-- 主要内容 -->
+    <div class="relative z-10 text-center">
+        <h1 id="game-title" class="font-serif text-[clamp(2rem,8vw,5rem)] font-bold opacity-0">
+            <span class="gold-gradient text-stroke text-shadow">87版红楼梦互动游戏</span>
+        </h1>
+        
+        <!-- 装饰元素 -->
+        <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+            <div class="w-[70%] h-[1px] bg-secondary/30 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="w-[1px] h-[70%] bg-secondary/30 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+        </div>
+    </div>
+    
+    <script>
+        // 创建星粒效果
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机位置和大小
+                const size = Math.random() * 3 + 1;
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const delay = Math.random() * 5;
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(star);
+            }
+        }
+        
+        // 控制文字动画
+        function animateTitle() {
+            const title = document.getElementById('game-title');
+            
+            // 延迟1秒后显示
+            setTimeout(() => {
+                // 添加推式效果
+                title.classList.add('push-animation');
+                title.style.opacity = '1';
+                
+                // 推式效果结束后添加浮动效果
+                setTimeout(() => {
+                    title.classList.add('float-animation');
+                }, 1000);
+            }, 1000);
+        }
+        
+        // 页面加载完成后执行
+        window.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            animateTitle();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【87版红楼梦部分文字版人物关系】</title>
+
+<link rel="stylesheet" type="text/css" href="css/测试/normalize.css" />
+<link rel="stylesheet" type="text/css" href="css/测试/demo.css">
+<link rel="stylesheet" href="dist/jquery.vidbacking.css" type="text/css">
+<link rel="stylesheet" href="css/测试/style2.css" type="text/css">
+
+<style>
+    /* 新增可滚动容器样式 */
+    .scrollable-content {
+        max-height: 300px; /* 设置最大高度，超出显示滚动条 */
+        overflow-y: auto; /* 垂直方向自动显示滚动条 */
+        padding-right: 10px; /* 右侧内边距，避免内容与滚动条重叠 */
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    
+    /* 自定义滚动条样式（可选） */
+    .scrollable-content::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .scrollable-content::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+    
+    .scrollable-content::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+    }
+    
+    .scrollable-content::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* 原有样式保持不变 */
+    .sound-icon { position: fixed; bottom: 20px; right: 20px; width: 40px; height: 40px; background-color: rgba(0,0,0,0.7); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100; opacity: 0.8; }
+    .sound-icon i { color: white; font-size: 20px; }
+    .play-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 200; cursor: pointer; }
+    .play-button { width: 100px; height: 100px; background-color: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; transition: all 0.3s; }
+    .play-button:hover { background-color: rgba(255,255,255,0.4); }
+    .play-button i { color: white; font-size: 40px; margin-left: 8px; }
+    .play-text { color: white; font-size: 20px; font-weight: bold; }
+    .fade-out { animation: fadeOut 0.5s forwards; }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; display: none; } }
+    
+    /* 红楼梦文字效果保持不变 */
+    .red-chamber-effect { display: inline-block; transition: all 1s ease; position: relative; }
+    .red-chamber-effect span { display: inline-block; margin: 0 2px; }
+    .red-chamber-effect.active { color: red !important; transform: scale(1.3); text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); }
+    @keyframes offsetAnimation { 0% { transform: translateY(0) translateX(0); } 100% { transform: translateY(-5px) translateX(5px); } }
+    .red-chamber-effect span:nth-child(1) { animation: offsetAnimation 1s ease-out 0.1s forwards; }
+    .red-chamber-effect span:nth-child(2) { animation: offsetAnimation 1s ease-out 0.2s forwards; }
+    .red-chamber-effect span:nth-child(3) { animation: offsetAnimation 1s ease-out 0.3s forwards; }
+
+    /* 新增循环波浪式文字效果 */
+    .wave-text {
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap; /* 防止文字换行 */
+    }
+    .wave-text span {
+        display: inline-block;
+        vertical-align: middle;
+        animation: waveLoop 0.9s ease-in-out infinite; /* 无限循环动画 */
+    }
+    /* 每个字符设置不同的动画延迟（形成波浪传递） */
+    .wave-text span:nth-child(1) { animation-delay: 0s; }
+    .wave-text span:nth-child(2) { animation-delay: 0.1s; }
+    .wave-text span:nth-child(3) { animation-delay: 0.2s; }
+    .wave-text span:nth-child(4) { animation-delay: 0.3s; }
+    .wave-text span:nth-child(5) { animation-delay: 0.4s; }
+    .wave-text span:nth-child(6) { animation-delay: 0.5s; }
+    .wave-text span:nth-child(7) { animation-delay: 0.6s; }
+    .wave-text span:nth-child(8) { animation-delay: 0.7s; }
+    .wave-text span:nth-child(9) { animation-delay: 0.8s; }
+    .wave-text span:nth-child(10) { animation-delay: 0.9s; } /* 适配10个字符 */
+
+    @keyframes waveLoop {
+        0% {
+            transform: translateY(0) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-5px) rotate(-10deg); /* 向上偏移+左旋转 */
+        }
+        100% {
+            transform: translateY(0) rotate(0deg); /* 回到初始状态 */
+        }
+    }
+
+    /* 隐藏初始动画（5秒前不显示波浪效果） */
+    .wave-text {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: all 0.5s ease; /* 入场过渡效果 */
+    }
+    .wave-text.active {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* ========== 新增元素延迟显示动画 ========== */
+    .delayed-fade {
+        opacity: 0;
+        transform: scale(0.1); /* 初始缩放为0.1倍 */
+        transition: all 1s ease; /* 动画总时长1秒 */
+    }
+
+    .delayed-fade.active {
+        opacity: 1;
+        transform: scale(1); /* 恢复正常大小 */
+    }
+
+    /* 按钮样式调整（确保动画兼容性） */
+    .htmleaf-demo a {
+        opacity: 0;
+        transform: scale(0.1);
+        transition: all 1s ease;
+        display: inline-block; /* 确保块级元素支持缩放 */
+    }
+
+    .htmleaf-demo a.active {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* ========== SVG文字轮廓边框特效 ========== */
+    .red-chamber-effect.active {
+        position: relative;
+        z-index: 1;
+        /* 原有的样式保持不变 */
+        color: transparent !important; /* 隐藏原始文字颜色 */
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3); /* 半透明描边增强立体感 */
+    }
+
+    /* 为每个字符添加描边动画容器 */
+    .red-chamber-effect span {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* 描边动画遮罩层 */
+    .red-chamber-effect span::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: transparent;
+        -webkit-text-stroke: 2px transparent; /* 初始透明描边 */
+        background-clip: text;
+        -webkit-background-clip: text;
+        z-index: -1;
+        opacity: 0;
+        animation: outlineAnimation 4s linear infinite;
+    }
+
+    /* 为每个字符设置不同的动画延迟 */
+    .red-chamber-effect span:nth-child(1)::after {
+        animation-delay: 0s;
+    }
+    .red-chamber-effect span:nth-child(2)::after {
+        animation-delay: 0.3s;
+    }
+    .red-chamber-effect span:nth-child(3)::after {
+        animation-delay: 0.6s;
+    }
+
+    /* 描边动画关键帧 */
+    @keyframes outlineAnimation {
+        0%, 100% {
+            opacity: 0;
+            transform: scale(1);
+            -webkit-text-stroke-color: rgba(255, 0, 0, 0);
+        }
+        10% {
+            opacity: 1;
+            -webkit-text-stroke-color: rgba(255, 0, 0, 1);
+        }
+        40% {
+            -webkit-text-stroke-color: rgba(255, 255, 255, 1);
+        }
+        70% {
+            -webkit-text-stroke-color: rgba(255, 165, 0, 1);
+        }
+        90% {
+            opacity: 1;
+            transform: scale(1.05);
+            -webkit-text-stroke-color: rgba(255, 0, 0, 0.5);
+        }
+    }
+</style>
+</head>
+<body>
+
+<video poster="assets/screenshot1.jpg" autoplay loop class="vidbacking" id="backgroundVideo">
+    <source src="视频/最终的引导视频.mp4" type="video/mp4">
+</video>
+背景视频时间长达2分30秒
+<!-- 添加延迟显示类到需要渐显的元素 -->
+<div class="video-back delayed-fade">
+    <h1><font size="14px">87版
+        <span class="red-chamber-effect">
+            <span data-text="红">红</span>
+            <span data-text="楼">楼</span>
+            <span data-text="梦">梦</span>
+        </span>
+        文字版的部分人物关系</font>
+    </h1>
+     <p><span class="wave-text" id="muteTip" style="size: 24px;">
+            <font size="5px"><span>右</span>&nbsp;
+            <span>下</span>&nbsp;
+            <span>角</span>&nbsp;
+            <span>可</span>&nbsp;
+            <span>进</span>&nbsp;
+            <span>行</span>&nbsp;
+            <span>视</span>&nbsp;
+            <span>频</span>&nbsp;
+            <span>静</span>&nbsp;
+            <span>音</span>&nbsp;</font>
+        </span><br></p>
+        <br><mark style="opacity: 0.7;color: #DAEFA3;"><font style="background-color: #000000;">在文字区域内滑动即可查阅看87版红楼梦文字版的部分人物关系</font></mark><br><br>
+    <!-- 将文字内容放入可滚动容器 -->
+    <div class="scrollable-content">
+       
+        
+        
+        <font style="color: #96CBFE;"size="14px">贾府家族核心人物：</font><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p align="left"style="margin-left: 12%;">
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾母：</font>贾代善之妻，史氏，是贾赦、贾政和贾敏的母亲，贾宝玉的祖母，林黛玉的外祖母，史湘云是其内侄孙女。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾赦：</font>贾母长子，前妻已死，生下儿子贾琏。续弦邢夫人，有小妾嫣红、翠云等，小妾还生下贾迎春和贾琮。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾政：</font>贾母次子，工部员外郎，妻子王夫人，生下长子贾珠、长女贾元春、次子贾宝玉。小妾赵姨娘生下次女贾探春、三子贾环，小妾周姨娘无子女。
+        </font><br></p>
+        <font style="color: #96CBFE;"size="14px">贾府年轻一代：</font><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p align="left"style="margin-left: 15%;">
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾琏：</font>贾赦长子，妻子王熙凤，小妾有平儿、秋桐、尤二姐，女儿是贾巧姐。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾元春：</font>贾政与王夫人的女儿，贾宝玉的同胞姐姐，因生于正月初一而取名元春，后选入宫中。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾迎春：</font>贾赦的庶女，贾琏的异母妹妹，贾宝玉的堂姐。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾探春：</font>赵姨娘之女，贾环的同母姐姐，精明能干。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾惜春：</font>贾敬的幺女、贾珍的胞妹，性格孤僻。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾宝玉：</font>贾政和王夫人的次子，与林黛玉相爱，却与薛宝钗成婚，是书中核心人物。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">李纨：</font>贾宝玉早夭长兄贾珠的妻子，儿子是贾兰。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾环：</font>赵姨娘之子，贾探春的同母弟弟，常与贾宝玉作对。
+        </font><br>
+        </p>
+        <font style="color: #96CBFE;"size="14px">其他相关人物：</font><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p align="left"style="margin-left: 12%;">
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">林黛玉：</font>父亲林如海，母亲贾敏，是贾母的外孙女，贾宝玉的姑表妹，自幼多病，性格敏感多疑。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">薛宝钗：</font>薛姨妈之女，与贾宝玉是姨表亲，因 “金玉良缘” 与宝玉成婚。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">薛姨妈：</font>薛蟠和薛宝钗之母，王夫人的亲妹妹。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">薛蟠：</font>薛姨妈之子，薛宝钗之兄，性格鲁莽霸道，妻子是夏金桂。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">史湘云：</font>贾母的侄孙女，父母早亡，常至贾府小住，性格开朗豪爽。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">秦可卿：</font>官员秦业从养生堂抱来的养女，嫁入贾家，成为宁国府长孙贾蓉的妻子。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾蓉：</font>贾珍之子，秦可卿之夫。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">尤氏：</font>贾珍之妻，尤二姐、尤三姐的姐姐（非血缘关系，尤二姐、三姐是尤氏继母带来的）。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">刘姥姥：</font>王家的 “偶然联宗” 的族亲王成之子王狗儿的岳母，王板儿的姥姥，曾多次进贾府，与贾府众人有诸多交集。
+        </font><br>
+        </p>
+        <font style="color: #96CBFE;"size="14px">奴仆丫鬟群体：</font><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p align="left"style="margin-left: 12%;">
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">鸳鸯：</font>贾母的大丫鬟，姓金，父母在南京为贾家看房子，哥哥金文翔是贾母房里的买办，嫂子是贾母房里管浆洗的头儿。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">平儿：</font>王熙凤的心腹大丫鬟，贾琏的通房丫鬟。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">袭人：</font>服侍贾宝玉的大丫鬟之一，是宝玉初试云雨的对象。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">晴雯：</font>贾宝玉身边的丫鬟，性格直率，心灵手巧。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">麝月：</font>贾宝玉的丫鬟，性格沉稳。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">金钏：</font>贾宝玉的贴身丫鬟，玉钏的姐姐，因与宝玉调笑被王夫人撵出，后投井自尽。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">司棋：</font>贾迎春的大丫头，邢夫人的陪房王善保家的外孙女，与表弟潘又安私通，后被撵出大观园。
+        </font><br>
+        </p>
+        <font style="color: #96CBFE;"size="14px">其他人物：</font><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p align="left"style="margin-left: 12%;">
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾雨村：</font>得甄士隐相助考取进士，曾为林黛玉的启蒙先生，后为攀附权贵，胡乱判案，是个世故圆滑之人。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">甄士隐：</font>甄英莲（香菱）父亲，曾救济过贾雨村，后家道中落。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">香菱：</font>本名甄英莲，小时被拐卖，后转卖给薛蟠为妾，薛宝钗为她取名香菱，林黛玉教她作诗。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾蔷：</font>宁国府的正派玄孙，父母早亡，从小跟贾珍生活，后成为贾府戏班的总管，与龄官相恋。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">柳湘莲：</font>宝玉的好友，尤三姐心仪的择偶对象，后因尤三姐自刎，削发出家。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾芸：</font>父亲早逝，为到荣国府谋差事，认宝玉为干儿子，与贾宝玉的丫鬟小红交好
+        </font><br>
+        </p>
+        <font style="color: #96CBFE;"size="14px">主子间的关系（补充）：</font><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <p align="left"style="margin-left: 12%;">
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾代儒与贾府主子：<br></font>贾代儒是贾家第二代庶流子弟，与贾代善同辈，是贾府族中的长辈，担任府中司塾，负责教导贾府子弟读书，与贾府众主子有族亲关系和师徒相关的关联。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">贾蔷与贾珍、贾蓉：<br></font>贾蔷是宁国府的正派玄孙，因父母早亡，从小跟贾珍生活，受贾珍溺爱，与贾蓉关系也较好，常一起游玩，后成为贾府戏班的总管。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">薛宝琴与薛宝钗：<br></font>薛宝琴是薛姨妈的侄女，薛虬的胞妹，是薛宝钗的堂妹，后许配给梅翰林之子。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">邢岫烟与邢夫人：<br></font>邢岫烟是邢忠夫妇的女儿，是邢夫人的侄女，后嫁给薛蝌。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">茗烟：</font>贾宝玉的心腹小厮，负责宝玉的日常出行等事务，常为宝玉打探消息、办事，对宝玉忠心耿耿，是宝玉身边得力的仆人。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">鸳鸯：</font>姓金，是贾家的家生奴婢，是侍奉贾母的大丫鬟之一，是贾母平日倚重的左右手，管理着贾母房中的大小事务，在贾府奴仆中有较高地位。
+        </font><br>
+        <font style="color: #C6C5FE;"size="5px">
+        	<font color="#9C2C2C"style="opacity: 0.7;">平儿：</font>是王熙凤的心腹大丫鬟，同时也是贾琏的通房丫鬟，协助王熙凤管理贾府事务，处理诸多琐事，对王熙凤忠心不二，是王熙凤的得力助手。
+        </font><br>
+        </p><br>
+        
+        
+    </div>
+    
+    <div class="htmleaf-demo center">
+      <a href="备用测试.html" class="delayed-fade">返回</a>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<div class="play-overlay" id="playOverlay">
+    <div class="play-button">
+        <i class="fa fa-play"></i>
+    </div>
+    <div class="play-text">点击开始(不可手慢：3秒时间)</div>
+</div>
+
+<div class="sound-icon" id="soundIcon">
+    <i class="fa fa-volume-up"></i>
+</div>
+
+<script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="dist/jquery.vidbacking.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function(){
+        // 原有逻辑保持不变
+        var video = document.getElementById('backgroundVideo');
+        var playOverlay = document.getElementById('playOverlay');
+        var soundIcon = document.getElementById('soundIcon');
+        var soundEnabled = false;
+        
+        $('body').vidbacking({ masked: true });
+        video.controls = false;
+        
+        video.addEventListener('loadedmetadata', function() {
+            video.play().then(function() {
+                soundIcon.style.display = 'flex';
+                soundEnabled = true;
+                setTimeout(function() {
+                    if (playOverlay) {
+                        playOverlay.classList.add('fade-out');
+                        setTimeout(function() { playOverlay.style.display = 'none'; }, 1000);
+                    }
+                }, 2000);
+            }).catch(function(error) {
+                if (playOverlay) playOverlay.style.display = 'flex';
+                console.log('自动播放被阻止:', error);
+            });
+        });
+        
+        if (playOverlay) {
+            playOverlay.addEventListener('click', function() {
+                video.play().then(function() {
+                    playOverlay.classList.add('fade-out');
+                    setTimeout(function() { playOverlay.style.display = 'none'; }, 1000);
+                    soundIcon.style.display = 'flex';
+                    soundEnabled = true;
+                    
+                    // 点击播放按钮后1秒，触发页面内容渐显动画
+                    setTimeout(function() {
+                        $('.delayed-fade').addClass('active');
+                    }, 1000);
+                    
+                    // 3秒后触发红楼梦文字效果（相对于点击时间）
+                    setTimeout(function() { 
+                        $('.red-chamber-effect').addClass('active'); 
+                    }, 3000);
+                    
+                    // 5秒后触发波浪文字效果（相对于点击时间）
+                    setTimeout(function() {
+                        $('#muteTip').addClass('active');
+                    }, 5000);
+                    
+                }).catch(function(error) { console.log('播放失败:', error); });
+            });
+        }
+        
+        soundIcon.addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            video.muted = !soundEnabled;
+            $(soundIcon).find('i').toggleClass('fa-volume-off fa-volume-up');
+        });
+        
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('keydown', function(e) {
+            if ([32,37,39,38,40].includes(e.keyCode)) e.preventDefault();
+        });
+    });
+</script>
+
+</body>
+</html>

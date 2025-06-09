@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开局选择</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000', // 深红色作为主色调（类似红楼梦主题）
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Cambria', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .darken-on-hover {
+                transition: all 0.5s ease;
+            }
+            .darken-on-hover:hover {
+                filter: brightness(0.6);
+            }
+            .btn-translucent {
+                background-color: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(5px);
+                transition: all 0.3s ease;
+            }
+            .btn-translucent:hover {
+                background-color: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+            }
+            .column-height {
+                height: 100vh;
+            }
+            @media (max-width: 768px) {
+                .column-height {
+                    height: 33.33vh;
+                }
+            }
+        }
+    </style>
+</head>
+<body class="m-0 p-0 overflow-hidden bg-gray-900">
+    <!-- 主容器 -->
+    <div class="flex flex-col md:flex-row h-screen">
+        
+        <!-- 第一列 -->
+        <div class="relative w-full md:w-1/3 overflow-hidden darken-on-hover column-height">
+            <img src="视频/引导视频图片/王熙凤.png" alt="人物1：王熙凤" 
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-in-out">
+            <button style="width: 150px;height: 150px;opacity: 0.5;" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn-translucent rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
+                <i><font size="14px"color="#53939C"><a href="王熙凤.html">王熙凤</a></font></i>
+            </button>
+            <audio class="audio-player" id="audio1">
+                <source src="视频/聪明累.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+        
+        <!-- 第二列 -->
+        <div class="relative w-full md:w-1/3 overflow-hidden darken-on-hover column-height">
+            <img src="视频/引导视频图片/贾宝玉.png" alt="人物2：贾宝玉" 
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-in-out">
+            <button style="width: 150px;height: 150px;opacity: 0.7;" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn-translucent rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
+                <i><font size="14px"color="#C6C5FE"><a href="王熙凤.html">贾宝玉</a></font></i>
+            </button>
+            <audio class="audio-player" id="audio2">
+                <source src="视频/枉凝眉.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+        
+        <!-- 第三列 -->
+        <div class="relative w-full md:w-1/3 overflow-hidden darken-on-hover column-height">
+            <img src="视频/引导视频图片/林黛玉.png" alt="人物3：林黛玉" 
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-in-out">
+           <button style="width: 150px;height: 150px;opacity: 0.7;" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn-translucent rounded-full w-20 h-20 flex items-center justify-center shadow-lg">
+                <i><font size="14px"color="#E9C062"><a href="9999.html">林黛玉</a></font></i>
+            </button>
+            <audio class="audio-player" id="audio3">
+                <source src="视频/葬花吟.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>
+
+    <script>
+        // ================== 禁止查看源代码功能 ==================
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // 阻止默认右键菜单
+            alert('禁止查看源代码'); // 弹出提示
+        });
+
+        // 屏蔽键盘快捷键（F12、Ctrl+U、Ctrl+Shift+I、Ctrl+S）
+        document.addEventListener('keydown', function(e) {
+            // F12（开发者工具）
+            if (e.key === 'F12') {
+                e.preventDefault();
+                alert('禁止打开开发者工具');
+            }
+            // Ctrl+U（查看源代码）
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                alert('禁止查看源代码');
+            }
+            // Ctrl+Shift+I（开发者工具）
+            if (e.ctrlKey && e.shiftKey && e.key === 'i') {
+                e.preventDefault();
+                alert('禁止打开开发者工具');
+            }
+            // Ctrl+S（保存页面）
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                alert('禁止保存页面');
+            }
+        });
+
+        // 阻止通过框架（iframe）嵌套页面
+        if (top !== window) {
+            top.location = window.location; // 强制跳转到当前页面，防止被嵌套
+        }
+
+        // ================== 原有音频控制逻辑 ==================
+        const columns = document.querySelectorAll('.darken-on-hover');
+        const audioPlayers = document.querySelectorAll('.audio-player');
+        
+        columns.forEach((column, index) => {
+            const audio = audioPlayers[index];
+            
+            column.addEventListener('mouseenter', () => {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log("自动播放被阻止:", e));
+            });
+            
+            column.addEventListener('mouseleave', () => {
+                audio.pause();
+            });
+        });
+
+        // 处理移动设备触摸事件（可选）
+        document.addEventListener('touchstart', function() {
+            // 可添加触摸反馈逻辑
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>畅游书海系统</title>
+
+<!--可无视-->
+<link rel="stylesheet" type="text/css" href="css/淡入淡出文字动画/style.css" />
+<script type="text/javascript">
+function MM_popupMsg(msg) { //v1.0
+  alert(msg);
+}
+</script>
+</head>
+
+<script src="js/淡出淡进文字动画/jquery.min.js"></script>
+
+<style>
+/*通过@import规则从Google Fonts服务导入了Raleway字体。
+ *300,300i,400,400i,500,500i,600,600i,700,700i,800,800i部分
+ * 指定了要加载的Raleway字体的不同粗细和样式。
+ * 这些数字代表字体的粗细，其中400是常规粗细，
+ * 300更细，700更粗，依此类推。i后缀表示斜体样式。 */
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i');
+
+/*选择所有具有toast__container类的HTML元素*/
+.toast__container {
+	/*将元素的显示类型设置为表格单元格。*/
+    display: table-cell;
+    /*将元素内的内容垂直居中对齐。*/
+    vertical-align: middle;
+}
+/*选择所有具有toast__cell类的HTML元素*/
+.toast__cell{
+	/*将元素的显示类型设置为内联块级元素。*/
+  display:inline-block;
+}
+/*给 .add-margin 类的元素设置  顶部外边距为20像素。*/
+.add-margin{
+  margin-top:20px;
+}
+/*给任何应用了 .toast__svg 类的SVG图形的填充颜色为白色*/
+.toast__svg{
+  fill:#fff;
+}
+
+.toast {
+	/*文本对齐方式为左对齐*/
+  text-align:left;
+  /*元素内部的填充（内边距）为上下各21像素，左右为0像素。*/
+    padding: 21px 0;
+    /*设置元素的背景颜色为白色。*/
+    background-color:#fff;
+    /*给元素的边角设置圆角，每个角的半径为4像素。*/
+    border-radius:4px;
+    /*设置元素的最大宽度为500像素*/
+    max-width: 500px;
+    
+    /*在元素具有相对定位或绝对定位时才会生效
+     *设置其元素的顶部边缘与其最近的已
+     * 具有定位属性的元素的顶部边缘之间的距离设置为0*/
+    top: 0px;
+    /*设置元素的定位方式为相对定位。*/
+    position:relative;
+    
+    
+    /*给元素添加了一个盒子阴影。
+     * 阴影的偏移量为向右1像素、
+     * 向下7像素，模糊半径为14像素
+     * 但扩展半径为-5像素（即阴影稍微收缩）
+     * 颜色为半透明的黑色（rgba中的a代表alpha通道，即透明度，这里为0.2）。
+    */
+    box-shadow: 1px 7px 14px -5px rgba(0,0,0,0.2);
+}
+
+/*提示框左侧蓝框填充     即用来在.toast元素的左侧创建一个垂直的、带有圆角的边框效果*/
+.toast:before {
+	/*解读：对于伪元素（如:before和:after）
+	 * content属性是必需的，即使它不包含实际的内容（如文本或图像）。
+	 * 
+	 * 将其设置为空字符串，即伪元素本身不包含任何文本或图像
+	 * 但它仍然可以被用来创建视觉效果
+	 * 比如作为边框、装饰或其他布局辅助。*/
+    content: '';
+    position: absolute;/*将伪元素的定位设置为绝对定位。*/
+   
+   /*设置伪元素的位置，使其位于其定位上下文中左上角的位置
+    * （即顶部和左侧边缘都与其最近的已定位祖先元素的相应边缘对齐）。*/
+    top: 0;left: 0;
+    
+    /*设置伪元素的宽度为4像素，高度为100%。
+     * 因为伪元素是绝对定位的
+     * 并且没有设置height的具体值 而是使用了百分比
+     * 所以它的高度将基于其包含块的高度。*/
+    width: 4px;height: 100%;
+    
+    
+    /*为伪元素的左上角和左下角设置圆角半径为4像素。*/
+  border-top-left-radius:4px;
+  border-bottom-left-radius: 4px;
+
+}
+/*提示框图标    即用来在.toast元素的内部（更具体地说，在其左上角附近）创建一个绝对定位的圆形图标*/
+.toast__icon{
+  position:absolute;/*将元素的定位设置为绝对定位。*/
+ 
+  /*设置元素的位置
+   * 使其顶部边缘位于其定位上下文中垂直中心的位置
+   * （通过top: 50%）
+   * 并且其左边缘距离其定位上下文的左边缘22像素。*/
+  top:50%;left:22px;
+  
+  /*使用CSS变换（transform）属性将元素
+   * 在垂直方向上向上移动其自身高度的50%*/
+  transform:translateY(-50%);
+  
+  /*设置元素的宽度和高度都为14像素。*/
+  width:14px;height:14px;
+  
+  /*给元素添加内边距*/
+  padding: 7px;
+  /*将元素的边框半径设置为50%*/
+  border-radius:50%;
+  /*设置元素的显示类型为inline-block*/
+  display:inline-block;
+}
+
+.toast__type {
+	/*设置文本颜色为深灰色*/
+  color: #3e3e3e;
+  /*设置字体粗细为700*/
+  font-weight: 700;
+  /*移除元素顶部的外边距*/
+  margin-top: 0;
+  /*在元素底部添加8像素的外边距*/
+  margin-bottom: 8px;
+}
+
+.toast__message {
+	/*设置文本字体大小为14像素*/
+    font-size: 14px;
+    /*移除元素顶部的外边距*/
+    margin-top: 0;
+    /*移除元素底部的外边距*/
+  margin-bottom: 0;
+  /*设置文本颜色为中等灰色*/
+    color: #878787;
+}
+
+.toast__content{
+  padding-left:70px;/*在元素内部左侧添加70像素的内边距*/
+  padding-right:60px;/*在元素内部右侧添加60像素的内边距*/
+}
+/*关闭按钮*/
+.toast__close {
+	/*将关闭按钮的定位设置为绝对定位。*/
+    position: absolute;
+    /*将关闭按钮的右边缘与其定位上下文的右边缘对齐，并留出22像素的空间*/
+    right: 22px;
+    /*将关闭按钮的顶部边缘与其定位上下文的垂直中心对齐*/
+    top: 50%;
+    
+    /*设置关闭按钮的宽度和高度都为14像素*/
+    width: 14px;height: 14px;
+    /*当鼠标悬停在关闭按钮上时，改变鼠标光标为指针样式*/
+    cursor:pointer;
+    /*用于SVG图形的填充颜色   将设置图标的填充颜色为中等灰色*/
+  fill:#878787;
+  /*通过向上移动关闭按钮自身高度的50%，实现垂直居中*/
+    transform: translateY(-50%);
+}
+/*选择所有具有.toast--green类的元素，并为它们的:before伪元素设置样式*/
+.toast--green .toast__icon{
+  background-color:#2BDE3F;/*设置这些伪元素的背景颜色为鲜绿色*/
+}
+/*选择所有具有.toast--green类的元素，并为它们的:before伪元素设置样式*/
+.toast--green:before{
+	/*将:before伪元素的背景颜色设置为鲜绿色*/
+  background-color:#2BDE3F;
+}
+/*选择所有位于具有.toast--blue类的元素内部的.toast__icon元素，并为它们设置样式*/
+.toast--blue .toast__icon{
+	/*将.toast__icon的背景颜色设置为亮蓝色*/
+  background-color:#1D72F3;
+}
+/*针对.toast--blue类*/
+.toast--blue:before{
+	/*将:before伪元素的背景颜色设置为亮蓝色*/
+  background-color:#1D72F3;
+}
+/*选择所有位于具有.toast--yellow类的
+ *元素内部的.toast__icon元素，并为它们设置样式*/
+.toast--yellow .toast__icon{
+	/*将.toast__icon的背景颜色设置为明亮的黄色*/
+  background-color:#FFC007;
+}
+/*针对.toast--yellow类*/
+.toast--yellow:before{
+	/*将:before伪元素的背景颜色设置为明亮的黄色*/
+  background-color:#FFC007;
+}
+</style>
+
+</head>
+<!--<body onload="MM_popupMsg('温馨提示：\r              请将浏览器更新至最新版本！！\r              若不是最新版本，在其浏览器运行时后端系统会错误影响观感。')">-->
+<body>
+
+<div class="toast__container">
+	<div class="container"style="margin-right: 50%;margin-bottom: 330%;margin-top: 25%;">
+	<h3 id="effect">
+		<span>欢</span><span>迎</span>
+		<span>来</span><span>到</span>
+		<span>畅</span><span>游</span>
+		<span>书</span><span>海</span>
+		<span>系</span><span>统</span>
+	</h3>
+</div>
+<div class="toast__cell"style="margin-top: 5%;">
+<!--<div class="toast toast--green">
+  <div class="toast__icon">
+    <svg version="1.1" class="toast__svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<g><g><path d="M504.502,75.496c-9.997-9.998-26.205-9.998-36.204,0L161.594,382.203L43.702,264.311c-9.997-9.998-26.205-9.997-36.204,0    c-9.998,9.997-9.998,26.205,0,36.203l135.994,135.992c9.994,9.997,26.214,9.99,36.204,0L504.502,111.7    C514.5,101.703,514.499,85.494,504.502,75.496z"></path>
+	</g></g>
+    </svg>
+  </div>
+  <div class="toast__content">
+    <p class="toast__type">成功</p>
+    <p class="toast__message">任何有访问权限的人都可以查看你邀请的访问者。</p>
+  </div>
+  <div class="toast__close">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.642 15.642" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 15.642 15.642">
+  <path fill-rule="evenodd" d="M8.882,7.821l6.541-6.541c0.293-0.293,0.293-0.768,0-1.061  c-0.293-0.293-0.768-0.293-1.061,0L7.821,6.76L1.28,0.22c-0.293-0.293-0.768-0.293-1.061,0c-0.293,0.293-0.293,0.768,0,1.061  l6.541,6.541L0.22,14.362c-0.293,0.293-0.293,0.768,0,1.061c0.147,0.146,0.338,0.22,0.53,0.22s0.384-0.073,0.53-0.22l6.541-6.541  l6.541,6.541c0.147,0.146,0.338,0.22,0.53,0.22c0.192,0,0.384-0.073,0.53-0.22c0.293-0.293,0.293-0.768,0-1.061L8.882,7.821z"></path>
+</svg>
+  </div>
+</div>-->
+
+
+<div class="toast toast--blue add-margin">
+  <div class="toast__icon">
+<svg version="1.1" class="toast__svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+<g>
+	<g id="info">
+		<g>
+			<path  d="M10,16c1.105,0,2,0.895,2,2v8c0,1.105-0.895,2-2,2H8v4h16v-4h-1.992c-1.102,0-2-0.895-2-2L20,12H8     v4H10z"></path>
+			<circle  cx="16" cy="4" r="4"></circle>
+		</g>
+	</g>
+</g>
+
+    </svg>
+  </div>
+  <div class="toast__content">
+    <p class="toast__type"><font size="4px">欢迎来到：【87版红楼梦网页版互动】</font></p>
+    <p class="toast__message"style="font-size: 3px;">
+    	
+    	1、该页面以及后端登录页面的左下角均有虚拟人物互动
+    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	其互动内容：聊天、粘贴语句(Esc退出)、换装、拍照、折叠/展开<br>
+    	2、若没有虚拟人物，多次打开页面或系统有延迟导致无法出现<br>
+    	3、进入系统首页的方法：点击右侧客服区首个选项<br>
+    	4、该页面是对该系统的简略说明<br>
+    	5、其他详情请查看项目根目录下的“项目须知.txt”<br>
+    	6、点击“X”即可关闭提示框<br>
+    	
+    </p>
+  </div>
+  <div class="toast__close">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.642 15.642" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 15.642 15.642">
+  <path fill-rule="evenodd" d="M8.882,7.821l6.541-6.541c0.293-0.293,0.293-0.768,0-1.061  c-0.293-0.293-0.768-0.293-1.061,0L7.821,6.76L1.28,0.22c-0.293-0.293-0.768-0.293-1.061,0c-0.293,0.293-0.293,0.768,0,1.061  l6.541,6.541L0.22,14.362c-0.293,0.293-0.293,0.768,0,1.061c0.147,0.146,0.338,0.22,0.53,0.22s0.384-0.073,0.53-0.22l6.541-6.541  l6.541,6.541c0.147,0.146,0.338,0.22,0.53,0.22c0.192,0,0.384-0.073,0.53-0.22c0.293-0.293,0.293-0.768,0-1.061L8.882,7.821z"></path>
+</svg>
+  </div>
+</div>
+
+<!--<div class="toast toast--yellow add-margin">
+  <div class="toast__icon">
+<svg version="1.1" class="toast__svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 301.691 301.691" style="enable-background:new 0 0 301.691 301.691;" xml:space="preserve">
+<g>
+	<polygon points="119.151,0 129.6,218.406 172.06,218.406 182.54,0  "></polygon>
+	<rect x="130.563" y="261.168" width="40.525" height="40.523"></rect>
+</g>
+    </svg>
+  </div>
+  <div class="toast__content">
+    <p class="toast__type">警告</p>
+    <p class="toast__message">任何有访问权限的人都可以查看你邀请的访问者。</p>
+  </div>
+  <div class="toast__close">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.642 15.642" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 15.642 15.642">
+  <path fill-rule="evenodd" d="M8.882,7.821l6.541-6.541c0.293-0.293,0.293-0.768,0-1.061  c-0.293-0.293-0.768-0.293-1.061,0L7.821,6.76L1.28,0.22c-0.293-0.293-0.768-0.293-1.061,0c-0.293,0.293-0.293,0.768,0,1.061  l6.541,6.541L0.22,14.362c-0.293,0.293-0.293,0.768,0,1.061c0.147,0.146,0.338,0.22,0.53,0.22s0.384-0.073,0.53-0.22l6.541-6.541  l6.541,6.541c0.147,0.146,0.338,0.22,0.53,0.22c0.192,0,0.384-0.073,0.53-0.22c0.293-0.293,0.293-0.768,0-1.061L8.882,7.821z"></path>
+</svg>
+  </div>
+</div>
+</div>-->
+</div>
+
+<script>
+jQuery(document).ready(function(){
+  jQuery('.toast__close').click(function(e){
+  	//首先，它调用preventDefault方法
+    e.preventDefault();
+    //然后，它查找触发点击事件的元素的父元素，并且这个父元素需要具有.toast类。
+    var parent = $(this).parent('.toast');
+    //找到.toast元素后，它使用fadeOut方法以“慢速”动画将元素淡出。
+    parent.fadeOut("slow", function() { $(this).remove(); } );
+  });
+});
+</script>
+	
+	<!--<script>
+        window.onload = function() {
+            alert('来自畅游书海系统的温馨提示：\n2222');
+        };
+    </script>-->
+	
+		<style>
+			#github svg {
+				/*当svg元素的任何属性
+				 * （在这个上下文中主要是宽度和高度）
+				 * 发生变化时，这些变化将在1秒内平滑过渡
+				 * 使变化看起来更自然。*/
+				transition: all 1s;
+				fill: #222;/*设置svg内部的填充颜色为深灰色*/
+				color: #fff;/*对于svg内部的文本元素（如果有的话），设置文本颜色为白色*/
+				position: absolute;/*将svg元素的定位设置为绝对定位*/
+				
+				/*将svg元素定位在其最近已定位元素的右上角
+				 * （如果父元素没有定位，则相对于<body>）*/
+				top: 0;right: 0;
+				border: 0;/*移除svg元素的边框*/
+				
+				/*设置svg元素的初始宽度和高度为80像素*/
+				width: 80px;height: 80px;
+			}
+	        /*悬停样式 (#github:hover svg 选择器)*/
+			#github:hover svg {
+				/*当鼠标悬停在#github元素上时
+				 * 增加其内部svg元素的宽度和高度到160像素*/
+				width: 160px;
+				height: 160px;
+			}
+		</style>
+		<script src="autoload.js"></script>
+		
+		
+<div>
+	<script src="js/客服/kefu.js"></script>
+	<style>
+		dl{
+			padding: 0;
+			padding: 10vw;
+		}
+	</style>
+    <script>
+        var kefu = new Kefu({
+            index: "",
+            tel: "159000000123",//电话号码
+            qq: "123489789",//在线QQ
+            wechatPerson: {
+                state: true,// true是开启个人微信二维码, false不开启
+                imgURL: "img/客服/2wm.png"
+            },
+            wechatofficial: {
+                state: true,// true是开启微信公众号二维码, false不开启
+                imgURL: "img/客服/2wm.png"
+            }//微信公众号
+        });
+    </script>
+
+
+<script src="js/淡出淡进文字动画/jquery.min.js"></script> 
+<script src="js/淡出淡进文字动画/jquery.easing.1.3.js"></script> 
+<script src="js/淡出淡进文字动画/text_plugin.js"></script> 
+<script src="js/淡出淡进文字动画/texteffect.js"></script>
+
+</body>
+</html>

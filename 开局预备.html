@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红楼梦开局预备</title>
+    
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义主题 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000', // 深红色主色调
+                        secondary: '#D4AF37', // 金色辅助色
+                        dark: '#1A1A1A', // 深色背景
+                        light: '#F5F1E6', // 浅色文字
+                    },
+                    fontFamily: {
+                        serif: ['SimSun', 'serif'],
+                        display: ['STKaiti', 'KaiTi', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            
+            .backdrop-blur {
+                backdrop-filter: blur(8px);
+            }
+            
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+            
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 背景视频样式 */
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.9;
+        }
+        
+        /* 渐入动画 */
+        .fade-in {
+            animation: fadeIn 2s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 文字呼吸效果 */
+        .breathing {
+            animation: breathing 4s ease-in-out infinite;
+        }
+        
+        @keyframes breathing {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="font-serif text-light min-h-screen flex flex-col">
+    <!-- 背景视频 -->
+    <video id="background-video" autoplay loop playsinline muted>
+        <source src="视频/红楼梦开篇 (2).mp4" type="video/mp4">
+        <!-- 备用内容 -->
+        <div class="absolute inset-0 bg-dark flex items-center justify-center">
+            <p class="text-center text-light p-8">
+                您的浏览器不支持视频播放，请尝试更新浏览器或使用其他设备。
+            </p>
+        </div>
+    </video>
+    
+    <!-- 视频控制按钮 -->
+    <div class="fixed bottom-6 right-6 z-50 flex space-x-4">
+        <button id="volume-toggle" class="glass-effect p-3 rounded-full text-light hover:bg-secondary/20 transition-all duration-300">
+            <i class="fa fa-volume-up"></i>
+        </button>
+        <button id="play-pause" class="glass-effect p-3 rounded-full text-light hover:bg-secondary/20 transition-all duration-300">
+            <i class="fa fa-pause"></i>
+        </button>
+    </div>
+    
+    <!-- 主内容区域 -->
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-12 relative">
+        <!-- 标题卡片 -->
+        <div class="rounded-2xl p-8 md:p-12 max-w-3xl w-full mx-auto fade-in"style="font-size: 45px;">
+            <h1 class="text-[clamp(2rem,8vw,4rem)] font-display font-bold text-center text-secondary breathing mb-6">
+                红楼梦开篇
+            </h1>
+            <p class="text-[clamp(1rem,3vw,1.25rem)] text-center leading-relaxed mb-8">
+                满纸荒唐言，一把辛酸泪。都云作者痴，谁解其中味？【开局选择角色】
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8"style="font-size: 14px;">
+                <a href="人物选择.html" class="glass-effect py-3 px-8 rounded-full text-center text-light hover:bg-primary/80 transition-all duration-300 transform hover:scale-105">
+                   准备好了点这里 <i class="fa fa-compass mr-2"></i>
+                </a>
+                <a href="备用测试.html"target="_parent" class="glass-effect py-3 px-8 rounded-full text-center text-light hover:bg-primary/80 transition-all duration-300 transform hover:scale-105">
+                   还没准备好点这里 <i class="fa fa-users mr-2"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <!-- JavaScript -->
+    <script>
+        // ================== 禁止查看源代码功能 ==================
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            alert('禁止查看源代码');
+        });
+
+        // 屏蔽键盘快捷键（F12、Ctrl+U、Ctrl+Shift+I）
+        document.addEventListener('keydown', function(e) {
+            // F12
+            if (e.key === 'F12' || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.shiftKey && e.key === 'i')) {
+                e.preventDefault();
+                alert('禁止访问开发者工具');
+            }
+        });
+
+        // 阻止通过框架查看源代码
+        if (top !== self) {
+            top.location = self.location;
+        }
+
+        // ================== 原有视频控制逻辑 ==================
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('background-video');
+            const volumeToggle = document.getElementById('volume-toggle');
+            const playPause = document.getElementById('play-pause');
+            
+            // 视频控制功能
+            volumeToggle.addEventListener('click', () => {
+                video.muted = !video.muted;
+                volumeToggle.innerHTML = video.muted 
+                    ? '<i class="fa fa-volume-off"></i>' 
+                    : '<i class="fa fa-volume-up"></i>';
+            });
+            
+            playPause.addEventListener('click', () => {
+                if (video.paused) {
+                    video.play();
+                    playPause.innerHTML = '<i class="fa fa-pause"></i>';
+                } else {
+                    video.pause();
+                    playPause.innerHTML = '<i class="fa fa-play"></i>';
+                }
+            });
+            
+            // 尝试自动播放（现代浏览器可能需要用户交互）
+            async function tryPlayVideo() {
+                try {
+                    await video.play();
+                    video.muted = false;
+                    volumeToggle.innerHTML = '<i class="fa fa-volume-up"></i>';
+                } catch (error) {
+                    video.muted = true;
+                    volumeToggle.innerHTML = '<i class="fa fa-volume-off"></i>';
+                    
+                    document.addEventListener('click', async () => {
+                        try {
+                            await video.play();
+                            video.muted = false;
+                            document.removeEventListener('click', arguments.callee);
+                        } catch (err) {
+                            console.log('用户交互后仍无法播放声音:', err);
+                        }
+                    }, { once: true });
+                }
+            }
+            
+            tryPlayVideo();
+        });
+    </script>
+</body>
+</html>

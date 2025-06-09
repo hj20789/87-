@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互动1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000', // 深红色作为主色调
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Cambria', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .darken-on-hover {
+                transition: all 0.5s ease;
+            }
+            .darken-on-hover:hover {
+                filter: brightness(0.6);
+            }
+            .btn-translucent {
+                background-color: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(5px);
+                transition: all 0.3s ease;
+            }
+            .btn-translucent:hover {
+                background-color: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+            }
+            .column-height {
+                height: 100vh;
+            }
+            @media (max-width: 768px) {
+                .column-height {
+                    height: 33.33vh;
+                }
+            }
+        }
+    </style>
+    
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        /* 背景视频容器 */
+        .background-video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        /* 背景视频 */
+        .background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 内容覆盖层 */
+        .content-overlay {
+            position: relative;
+            z-index: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.3); /* 半透明黑色叠加层增强可读性 */
+        }
+        
+        /* 视频控制栏 */
+        .video-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 30px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .content-overlay:hover .video-controls {
+            opacity: 1;
+        }
+        
+        /* 控制按钮 */
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .control-btn:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* 结束后显示的按钮组 */
+        .end-buttons {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .end-buttons.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 结束按钮样式 */
+        .end-button {
+            padding: 12px 30px;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .end-button:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: black;
+        }
+        
+        /* 进度条容器 */
+        .progress-container {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 800px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2.5px;
+            cursor: pointer;
+        }
+        
+        /* 进度条 */
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #ff4444;
+            border-radius: 2.5px;
+            position: relative;
+        }
+        
+        /* 进度条指示器 */
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .progress-container:hover .progress-bar::after {
+            opacity: 1;
+        }
+        
+        /* 时间显示 */
+        .time-display {
+            position: absolute;
+            bottom: 90px;
+            right: 10%;
+            color: white;
+            font-size: 14px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        
+        /* 倍速控制下拉菜单 */
+        .speed-menu {
+            position: relative;
+        }
+        
+        .speed-selector {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            padding: 5px 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .speed-menu:hover .speed-selector {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .speed-option {
+            padding: 8px 15px;
+            color: white;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .speed-option:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .speed-option.active {
+            background-color: #ff4444;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .video-controls {
+                bottom: 10px;
+                gap: 8px;
+                padding: 8px 15px;
+            }
+            
+            .control-btn {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .progress-container {
+                bottom: 60px;
+                width: 90%;
+            }
+            
+            .time-display {
+                bottom: 80px;
+                right: 5%;
+            }
+            
+            .end-button {
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+        }
+        /* 按钮悬停提示文字样式 */
+[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none; /* 避免遮挡交互 */
+}
+
+[title]:hover::after {
+    opacity: 1;
+}
+
+/* 移动端适配：缩小提示文字 */
+@media (max-width: 768px) {
+    [title]:hover::after {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- 背景视频容器 -->
+    <div class="background-video-container">
+        <video id="backgroundVideo" class="background-video" autoplay muted loop>
+            <source src="视频/黛玉互动1.mp4" type="video/mp4">
+            您的浏览器不支持视频播放。
+        </video>
+    </div>
+    
+    <!-- 内容覆盖层 -->
+    <div class="content-overlay">
+        <!-- 视频控制栏 -->
+        <!-- 视频控制栏按钮（添加 title 提示文字） -->
+<div class="video-controls">
+    <div class="control-btn" id="playPauseBtn" title="播放/暂停">
+        <i class="fa fa-play"></i>
+    </div>
+    
+    <div class="speed-menu">
+        <div class="control-btn" id="speedBtn" title="选择倍速">
+            <i class="fa fa-tachometer"></i>
+        </div>
+        <!-- 倍速选项按钮（添加 title 提示文字） -->
+        <div class="speed-selector">
+            <div class="speed-option active" data-speed="1" title="1.0倍速">1.0X</div>
+            <div class="speed-option" data-speed="1.5" title="1.5倍速">1.5X</div>
+            <div class="speed-option" data-speed="2" title="2.0倍速">2.0X</div>
+            <div class="speed-option" data-speed="2.5" title="2.5倍速">2.5X</div>
+            <div class="speed-option" data-speed="3" title="3.0倍速">3.0X</div>
+        </div>
+    </div>
+    
+    <div class="control-btn" id="screenshotBtn" title="截图">
+        <i class="fa fa-camera"></i>
+    </div>
+    
+    <div class="control-btn" id="fullscreenBtn" title="全屏/退出全屏">
+        <i class="fa fa-expand"></i>
+    </div>
+</div>
+        
+        <!-- 进度条 -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <!-- 时间显示 -->
+        <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+        
+        <!-- 视频结束后显示的按钮 -->
+        <div class="end-buttons" id="endButtons">
+            <button class="end-button" onclick="replayVideo()">
+                <i class="fa fa-refresh mr-2"></i>选项一
+            </button>
+            <button class="end-button" onclick="goToHome()">
+                <i class="fa fa-home mr-2"></i>选项二
+            </button>
+            <button class="end-button" onclick="exitFullscreen()">
+                <i class="fa fa-compress mr-2"></i>选项三
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const video = document.getElementById('backgroundVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const speedOptions = document.querySelectorAll('.speed-option');
+        const screenshotBtn = document.getElementById('screenshotBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const endButtons = document.getElementById('endButtons');
+        const speedBtn = document.getElementById('speedBtn');
+        
+        // 初始化设置
+        video.loop = false; // 关闭循环播放
+        video.muted = false; // 取消静音（根据需要调整）
+        
+        // 播放/暂停控制
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        
+        function togglePlayPause() {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
+            } else {
+                video.pause();
+                playPauseBtn.innerHTML = '<i class="fa fa-play"></i>';
+            }
+        }
+        
+        // 进度条控制
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            video.currentTime = pos * video.duration;
+        });
+        
+        // 更新进度条和时间显示
+        video.addEventListener('timeupdate', updateProgress);
+        
+        function updateProgress() {
+            const percent = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = `${percent}%`;
+            
+            // 更新时间显示
+            const currentMinutes = Math.floor(video.currentTime / 60);
+            const currentSeconds = Math.floor(video.currentTime % 60);
+            const durationMinutes = Math.floor(video.duration / 60);
+            const durationSeconds = Math.floor(video.duration % 60);
+            
+            timeDisplay.textContent = `${padZero(currentMinutes)}:${padZero(currentSeconds)} / ${padZero(durationMinutes)}:${padZero(durationSeconds)}`;
+        }
+        
+        // 格式化时间（补零）
+        function padZero(num) {
+            return num < 10 ? `0${num}` : num;
+        }
+        
+        // 倍速控制
+        speedOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const speed = parseFloat(option.dataset.speed);
+                video.playbackRate = speed;
+                
+                // 更新选中状态
+                speedOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+            });
+        });
+        
+        // 截图功能
+        screenshotBtn.addEventListener('click', takeScreenshot);
+        
+        function takeScreenshot() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const imgData = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = `screenshot-${Date.now()}.png`;
+            link.href = imgData;
+            link.click();
+        }
+        
+        // 全屏控制
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`全屏请求失败: ${err.message}`);
+                });
+                fullscreenBtn.innerHTML = '<i class="fa fa-compress"></i>';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    fullscreenBtn.innerHTML = '<i class="fa fa-expand"></i>';
+                }
+            }
+        }
+        
+        // 监听全屏状态变化
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.innerHTML = '<i class="fa fa-expand"></i>';
+            }
+        });
+        
+        // 视频结束事件
+        video.addEventListener('ended', () => {
+            playPauseBtn.innerHTML = '<i class="fa fa-play"></i>';
+            
+            // 3秒后显示结束按钮
+            setTimeout(() => {
+                endButtons.classList.add('active');
+            }, 3000);
+        });
+        
+        // 重新播放函数
+        function replayVideo() {
+            video.currentTime = 0;
+            video.play();
+            playPauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
+            endButtons.classList.remove('active');
+        }
+        
+        // 返回首页函数（示例）
+        function goToHome() {
+            window.location.href = "/";
+        }
+        
+        // 退出全屏函数
+        function exitFullscreen() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        }
+        
+        // 点击视频本身播放/暂停
+        video.addEventListener('click', togglePlayPause);
+        
+        // 移动端适配：触摸开始时显示控制栏
+        let touchTimer;
+        document.addEventListener('touchstart', () => {
+            clearTimeout(touchTimer);
+            document.querySelector('.video-controls').style.opacity = '1';
+            
+            touchTimer = setTimeout(() => {
+                document.querySelector('.video-controls').style.opacity = '0';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

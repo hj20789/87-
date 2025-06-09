@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>87版红楼梦部分演员表+人物关系</title>
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind CSS -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            /*primary: '#8B0000', // 深红色，代表红楼梦的主题色*/
+            secondary: '#D4AF37', // 金色，代表贵族气质
+            neutral: '#F5F5DC', // 米色，代表古典感
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .bg-blur {
+        backdrop-filter: blur(8px);
+      }
+      .hover-scale {
+        transition: transform 0.3s ease;
+      }
+      .hover-scale:hover {
+        transform: scale(1.05);
+      }
+    }
+  </style>
+  
+  <!-- 自定义样式 -->
+  <style>
+    /* 确保页面占据整个视口高度 */
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    
+    /* 背景视频样式 */
+    .bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    
+    /* 平滑滚动 */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* 角色卡片悬停效果 */
+    .character-card {
+      transition: all 0.3s ease;
+    }
+    
+    .character-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* 角色信息显示动画 */
+    .character-info {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+    
+    .character-card:hover .character-info {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* 加载动画 */
+    .loader {
+      border: 16px solid #f3f3f3;
+      border-top: 16px solid #8B0000;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="font-serif text-neutral">
+  <!-- 加载动画 -->
+  <div id="loader" class="fixed inset-0 flex items-center justify-center bg-black z-50">
+    <div class="loader"></div>
+    <p class="mt-4 text-primary text-xl">&nbsp;&nbsp;&nbsp;<font size="10px"color="#3755AD">正在加载...</font></p>
+  </div>
+
+  <!-- 背景视频 -->
+  <video class="bg-video" autoplay loop muted playsinline>
+    <source src="视频/最终的引导视频.mp4" type="video/mp4">
+    您的浏览器不支持视频标签。
+  </video>
+
+  <!-- 顶部导航 -->
+  <header class="fixed top-0 left-0 w-full z-40 transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center bg-primary/80 backdrop-blur-md">
+      <a href="备用测试.html"target="_parent" class="text-2xl font-bold text-secondary hover:text-white transition-colors duration-300">
+        <i class="fa fa-book mr-2"></i>进行红楼梦互动之旅
+      </a>
+      
+      <nav class="hidden md:flex space-x-8">
+        <a href="#main-characters" class="text-neutral hover:text-secondary transition-colors duration-300">主要角色</a>
+        <a href="#female-characters" class="text-neutral hover:text-secondary transition-colors duration-300">金陵十二钗</a>
+        <a href="#other-characters" class="text-neutral hover:text-secondary transition-colors duration-300">其他角色</a>
+        <a href="#about" class="text-neutral hover:text-secondary transition-colors duration-300">关于</a>
+      </nav>
+      
+      <!-- 移动端菜单按钮 -->
+      <button id="menu-toggle" class="md:hidden text-neutral text-2xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+    
+    <!-- 移动端菜单 -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-50 flex flex-col justify-center items-center hidden">
+      <button id="menu-close" class="absolute top-6 right-6 text-neutral text-3xl">
+        <i class="fa fa-times"></i>
+      </button>
+      <nav class="flex flex-col space-y-8 text-2xl">
+        <a href="#main-characters" class="text-neutral hover:text-secondary transition-colors duration-300">主要角色</a>
+        <a href="#female-characters" class="text-neutral hover:text-secondary transition-colors duration-300">金陵十二钗</a>
+        <a href="#other-characters" class="text-neutral hover:text-secondary transition-colors duration-300">其他角色</a>
+        <a href="#about" class="text-neutral hover:text-secondary transition-colors duration-300">关于</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 英雄区域 -->
+  <section class="min-h-screen flex items-center justify-center relative">
+    <div class="absolute inset-0 bg-black/60 z-10"></div>
+    <div class="container mx-auto px-4 text-center relative z-20">
+      <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-secondary mb-6 text-shadow animate-fade-in">
+        87版红楼梦相关的演员表
+      </h1>
+      <p class="text-[clamp(1rem,3vw,1.5rem)] text-neutral mb-12 max-w-3xl mx-auto text-shadow">
+        重温经典，感受中国古典文学的魅力
+      </p>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a style="margin-left: -3%;" href="#main-characters" class="inline-block bg-primary hover:bg-primary/80 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+        探索角色 <i class="fa fa-arrow-down ml-2"></i>
+      </a>
+      <a style="margin-left: 3%;" href="备用测试.html"target="_parent" class="inline-block bg-primary hover:bg-primary/80 text-white font-bold py-3 px-8 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+        选择角色互动 <i class="fa fa-arrow-down ml-2"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- 主要角色部分 -->
+  <section id="main-characters" class="py-20 relative">
+    <div class="absolute inset-0 bg-black/70 z-10"></div>
+    <div class="container mx-auto px-4 relative z-20">
+      <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-secondary mb-16 text-center">
+        <span class="inline-block border-b-2 border-secondary pb-2">主要角色</span>
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 贾宝玉 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-80 overflow-hidden">
+    <!-- 使用两个图片元素，通过CSS控制显示和隐藏 -->
+    <img 
+      src="img/欧阳奋强图片.png" 
+      alt="欧阳奋强饰贾宝玉" 
+      class="w-full h-full object-cover main-image"
+    >
+    <img 
+      src="img/贾宝玉角色.png" 
+      alt="欧阳奋强饰贾宝玉" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-4 left-4 text-2xl font-bold text-secondary">
+      贾宝玉 <span class="text-neutral text-lg font-normal">(欧阳奋强 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-6 character-info">
+    <p class="mb-4"><span class="font-bold text-secondary">人物关系：</span>荣国府衔玉而生的公子，贾母的宝贝孙子</p>
+    <p class="mb-4"><span class="font-bold text-secondary">性格特点：</span>叛逆不羁，尊重女性，反对封建礼教</p>
+    <p class="mb-4"><span class="font-bold text-secondary">判词：</span>富贵不知乐业，贫穷难耐凄凉。可怜辜负好韶光，于国于家无望。</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+        
+        <!-- 林黛玉 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-80 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/陈晓旭.png" 
+      alt="陈晓旭饰林黛玉" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/林黛玉角色.png" 
+      alt="陈晓旭饰林黛玉" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-4 left-4 text-2xl font-bold text-secondary">
+      林黛玉 <span class="text-neutral text-lg font-normal">(陈晓旭 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-6 character-info">
+    <p class="mb-4"><span class="font-bold text-secondary">人物关系：</span>贾母的外孙女，贾宝玉的姑表妹</p>
+    <p class="mb-4"><span class="font-bold text-secondary">性格特点：</span>敏感细腻，才华横溢，情感丰富</p>
+    <p class="mb-4"><span class="font-bold text-secondary">判词：</span>可叹停机德，堪怜咏絮才。玉带林中挂，金簪雪里埋。</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+        
+        <!-- 薛宝钗 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-80 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/张莉.png" 
+      alt="张莉饰薛宝钗" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/薛宝钗角色.png" 
+      alt="张莉饰薛宝钗" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-4 left-4 text-2xl font-bold text-secondary">
+      薛宝钗 <span class="text-neutral text-lg font-normal">(张莉 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-6 character-info">
+    <p class="mb-4"><span class="font-bold text-secondary">人物关系：</span>王夫人的外甥女，贾宝玉的姨表姐</p>
+    <p class="mb-4"><span class="font-bold text-secondary">性格特点：</span>稳重端庄，博学多才，世故圆滑</p>
+    <p class="mb-4"><span class="font-bold text-secondary">判词：</span>可叹停机德，堪怜咏絮才。玉带林中挂，金簪雪里埋。</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+        
+        <!-- 王熙凤 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-80 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src=" img/邓婕.png" 
+      alt="邓婕饰王熙凤" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="视频/引导视频图片/王熙凤.png" 
+      alt="邓婕饰王熙凤" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-4 left-4 text-2xl font-bold text-secondary">
+      王熙凤 <span class="text-neutral text-lg font-normal"><font color="#000000"style="opacity: 0.5;">(邓婕 饰)</font></span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-6 character-info">
+    <p class="mb-4"><span class="font-bold text-secondary">人物关系：</span>贾琏的妻子，王夫人的内侄女</p>
+    <p class="mb-4"><span class="font-bold text-secondary">性格特点：</span>精明能干，心狠手辣，八面玲珑</p>
+    <p class="mb-4"><span class="font-bold text-secondary">判词：</span>机关算尽太聪明，反误了卿卿性命。生前心已碎，死后性空灵。</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+    
+        
+        <!-- 贾母 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-80 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/李婷1.png" 
+      alt="李婷饰贾母" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/贾母角色.png" 
+      alt="李婷饰贾母" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-4 left-4 text-2xl font-bold text-secondary">
+      贾母 <span class="text-neutral text-lg font-normal">(李婷 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-6 character-info">
+    <p class="mb-4"><span class="font-bold text-secondary">人物关系：</span>贾府的最高长辈，贾宝玉的祖母</p>
+    <p class="mb-4"><span class="font-bold text-secondary">性格特点：</span>位高权重，疼爱子孙，善于享受生活</p>
+    <p class="mb-4"><span class="font-bold text-secondary">角色背景：</span>贾府的精神领袖，经历过家族的鼎盛时期</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+    
+        
+        <!-- 贾政 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-80 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/马加奇.png" 
+      alt="马加奇饰贾政" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/贾政角色.png" 
+      alt="马加奇饰贾政" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-4 left-4 text-2xl font-bold text-secondary">
+      贾政 <span class="text-neutral text-lg font-normal">(马加奇 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-6 character-info">
+    <p class="mb-4"><span class="font-bold text-secondary">人物关系：</span>贾宝玉的父亲，贾母的次子</p>
+    <p class="mb-4"><span class="font-bold text-secondary">性格特点：</span>为人端方正直，谦恭厚道，礼贤下士</p>
+    <p class="mb-4"><span class="font-bold text-secondary">角色背景：</span>贾府的主要管理者之一，期望儿子能光宗耀祖</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度切换） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加过渡动画使切换更平滑 */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out; /* 0.3秒过渡时间 */
+}
+
+/* 隐藏默认图片的指针样式（可选） */
+.main-image {
+  pointer-events: none; /* 避免悬停时触发点击事件 */
+}
+</style>
+  </section>
+
+  <!-- 金陵十二钗部分 -->
+  <section id="female-characters" class="py-20 relative">
+    <div class="absolute inset-0 bg-black/70 z-10"></div>
+    <div class="container mx-auto px-4 relative z-20">
+      <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-secondary mb-16 text-center">
+        <span class="inline-block border-b-2 border-secondary pb-2">金陵十二钗(已排名)</span>
+      </h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+       <!-- 林黛玉 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/陈晓旭.png" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="视频/引导视频图片/林黛玉.png" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      林黛玉 <span class="text-neutral text-sm font-normal">(陈晓旭 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>金陵十二钗之首</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她前世为三生石边的绛珠草，为还神瑛侍者甘露之惠而下凡，生性敏感多疑，多愁善感，极具诗才，是世界文学作品中最富灵气的经典女性形象之一</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>巡盐御史林如海与贾府千金贾敏的独生女，贾母的外孙女，贾宝玉的姑表妹、恋人</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>可叹停机德，堪怜咏絮才。玉带林中挂，金簪雪里埋。</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+     <!-- 林黛玉 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/张莉.png" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="视频/引导视频图片/薛宝钗.png" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      薛宝钗 <span class="text-neutral text-sm font-normal">(张莉 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>排名第二</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她大方典雅，举止雍容，博学多才，通达了悟。虽对官场黑暗深恶痛绝，但仍主张贾宝玉应致力于仕途经济，她与林黛玉并列为金陵十二钗正册之首</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>薛姨妈的女儿，贾宝玉的从母姊（姨姊）、妻子</p>
+    <p class="mb-4"><span class="font-bold text-secondary">判词：</span>可叹停机德，堪怜咏絮才。玉带林中挂，金簪雪里埋。</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>  
+       	
+       	
+       <!-- 元春 -->
+       <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="img/成梅.png" 
+      alt="成梅饰贾元春" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="视频/引导视频图片/贾元春.png" 
+      alt="成梅饰贾元春" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      贾元春 <span class="text-neutral text-sm font-normal">(成梅 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>位列第三</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她自幼由贾母教养，因贤孝才德选入宫作女吏，后封凤藻宫尚书，加封贤德妃。她虽给贾家带来了荣耀，但自己却被幽闭在皇家深宫内</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾政与王夫人之长女，贾宝玉的亲姐姐</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>喜荣华正好，恨无常又到。眼睁睁，把万事全抛；荡悠悠，芳魂消耗。</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+
+<!-- 探春 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="img/东方闻樱.png" 
+      alt="金莉莉饰贾迎春" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/贾探春.jpg" 
+      alt="金莉莉饰贾迎春" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      贾探春 <span class="text-neutral text-sm font-normal"> (东方闻樱 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>金陵十二钗之四</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她精明能干，有 “玫瑰花” 之诨名，个性刚烈，庶出的身份是她最大的心结，曾在抄检大观园时维护自己和丫鬟的尊严</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾政与赵姨娘所生，贾府三小姐，贾宝玉同父异母的妹妹</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>才自精明志自高，生于末世运偏消。清明涕送江边望，千里东风一梦遥。</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+<!-- 史湘云 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="img/郭霄珍.png" 
+      alt="郭霄珍饰史湘云" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="img/史湘云.jpg" 
+      alt="郭霄珍饰史湘云" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      史湘云 <span class="text-neutral text-sm font-normal">(郭霄珍 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>位列第五</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她从小父母双亡，由叔父史鼐和史鼎抚养。她心直口快，开朗豪爽，心怀坦荡，从未把儿女私情略萦心上，性格与林黛玉形成鲜明对比</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>金陵四大家中史家的千金小姐，贾母的侄孙女</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>富贵又何为，襁褓之间父母违。展眼吊斜晖，湘江水逝楚云飞。</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+<!-- 妙玉 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/姬玉【姬培杰 】.png" 
+      alt="姬培杰饰妙玉" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="img/妙玉.png" 
+      alt="姬培杰饰妙玉" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      妙玉 <span class="text-neutral text-sm font-normal">(姬玉【姬培杰 】饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>金陵十二钗之六</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>因自幼多病，只得入了空门带发修行，极通文墨，极熟经典，模样又极好，后被贾家请入栊翠庵修行，性格清高孤傲</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>苏州人氏，祖上是读书仕宦人家</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>欲洁何曾洁，云空未必空。可怜金玉质，终陷淖泥中。</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+
+        
+        <!-- 迎春 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="img/金莉莉.png" 
+      alt="金莉莉饰贾迎春" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/贾迎春.jpg" 
+      alt="金莉莉饰贾迎春" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      贾迎春 <span class="text-neutral text-sm font-normal">(金莉莉 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>位列第七</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她老实无能，懦弱怕事，有 “二木头” 的诨名，在处世为人上只知退让，任人欺侮，攒珠垒丝金凤首饰被下人拿去赌钱也不追究</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾赦与妾所生的，排行为贾府二小姐</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>子系中山狼，得志便猖狂。金闺花柳质，一载赴黄粱。</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+        
+        <!-- 惜春 -->
+       <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="img/胡泽红.png" 
+      alt="胡泽红饰贾惜春" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="img/贾惜春.png" 
+      alt="胡泽红饰贾惜春" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      贾惜春 <span class="text-neutral text-sm font-normal">(胡泽红 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>金陵十二钗之八</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>因父亲贾敬好道炼丹，母亲早逝，她在贾母身边长大，养成了孤僻冷漠的性格，心冷嘴冷，抄检大观园时，撵走毫无过错的丫鬟入画</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾珍的妹妹，自小喜爱画画</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>勘破三春景不长，缁衣顿改昔年妆。可怜绣户侯门女，独卧青灯古佛旁。</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+     
+<!-- 妙玉 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="img/邓婕.png" 
+      alt="姬培杰饰妙玉" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="视频/引导视频图片/王熙凤.png" 
+      alt="姬培杰饰妙玉" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      王熙凤 <span class="text-neutral text-sm font-normal">(邓婕饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>排名第九</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她精明强干，深得贾母和王夫人的信任，是贾府的实际大管家，但为人处事十分圆滑周到，也干过图财害命的事，手段较为毒辣</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾琏之妻，金陵四大家王家的小姐、贾家的媳妇，王夫人的内侄女</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>欲洁何曾洁，云空未必空。可怜金玉质，终陷淖泥中。</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+<!-- 妙玉 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="img/艾梦欣.png" 
+      alt="姬培杰饰妙玉" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="img/贾巧姐.png" 
+      alt="姬培杰饰妙玉" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      贾巧姐 <span class="text-neutral text-sm font-normal">(艾梦欣饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>金陵十二钗之十</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她从小生活优裕，是豪门千金。贾府败落后，险些被舅舅王仁和堂叔贾环卖与藩王作使女，后得刘姥姥帮忙，被带入乡下</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾琏与王熙凤的女儿，生在七月初七，刘姥姥给她取名为 “巧姐”</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>势败休云贵，家亡莫论亲。偶因济刘氏，巧得遇恩人。</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>   
+        
+        
+        
+        
+        <!-- 李纨 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/孙梦泉.png" 
+      alt="孙梦泉饰李纨" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="img/李纨.png" 
+      alt="孙梦泉饰李纨" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      李纨 <span class="text-neutral text-sm font-normal">(孙梦泉 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>位列第十一</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>她从小受 “女子无才便是德” 的教育，贾珠死后一直守寡，恪守封建礼法，如 “槁木死灰” 一般，只知抚养亲子，闲时陪侍小姑等做女红、诵读</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>字宫裁，出身金陵名宦，是贾珠之妻，生有儿子贾兰</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>桃李春风结子完，到头谁似一盆兰。如冰水好空相妒，枉与他人作笑谈。</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+        
+        <!-- 秦可卿 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/张蕾.png" 
+      alt="张蕾饰秦可卿" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/秦可卿.png" 
+      alt="张蕾饰秦可卿" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      秦可卿 <span class="text-neutral text-sm font-normal">(张蕾 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">排名：</span>金陵十二钗之十二</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">生平：</span>营缮司郎中秦邦业从养生堂抱养的女儿。她长得袅娜纤巧，性格风流，行事又温柔和平，深得贾母等人的欢心，但与公公贾珍关系暧昧，致使其年轻早夭，身世极为神秘</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾蓉之妻，营缮司郎中秦邦业从养生堂抱养的女儿</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">判词：</span>情天情海幻情身，情既相逢必主淫。漫言不肖皆荣出，造衅开端实在宁。</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 其他角色部分 -->
+  <section id="other-characters" class="py-20 relative">
+    <div class="absolute inset-0 bg-black/70 z-10"></div>
+    <div class="container mx-auto px-4 relative z-20">
+      <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-secondary mb-16 text-center">
+        <span class="inline-block border-b-2 border-secondary pb-2">其他角色</span>
+      </h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- 袭人 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/袁玫.png" 
+      alt="袁玫饰袭人" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/袭人.png" 
+      alt="袁玫饰袭人" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      袭人 <span class="text-neutral text-sm font-normal">(袁玫 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾宝玉的贴身丫鬟</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">性格特点：</span>温柔和顺，处事稳重</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+
+        
+        <!-- 晴雯 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/安雯.png" 
+      alt="安雯饰晴雯" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/晴雯.png" 
+      alt="安雯饰晴雯" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      晴雯 <span class="text-neutral text-sm font-normal">(安雯 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾宝玉的丫鬟</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">性格特点：</span>心比天高，风流灵巧</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+        
+        <!-- 紫鹃 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/陈剑月.png" 
+      alt="陈剑月饰紫鹃" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/紫鹃.png" 
+      alt="陈剑月饰紫鹃" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      紫鹃 <span class="text-neutral text-sm font-normal">(陈剑月 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>林黛玉的丫鬟</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">性格特点：</span>聪慧机敏，忠心耿耿</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画 */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+</style>
+
+        
+        <!-- 薛蟠 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/韩准.png" 
+      alt="韩准饰薛蟠" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/薛蟠.png" 
+      alt="韩准饰薛蟠" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      薛蟠 <span class="text-neutral text-sm font-normal">(韩准 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>薛宝钗的哥哥</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">性格特点：</span>骄横跋扈，荒淫无度</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+
+        
+        <!-- 邢夫人 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/夏明辉.png" 
+      alt="夏明辉饰邢夫人" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/邢夫人.png" 
+      alt="夏明辉饰邢夫人" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      邢夫人 <span class="text-neutral text-sm font-normal">(夏明辉 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾赦的妻子</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">性格特点：</span>刻薄吝啬，心胸狭隘</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+
+        
+        <!-- 王夫人 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/周贤珍.png" 
+      alt="周贤珍饰王夫人" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏，通过绝对定位覆盖主图） -->
+    <img 
+      src="img/王夫人.png" 
+      alt="周贤珍饰王夫人" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      王夫人 <span class="text-neutral text-sm font-normal">(周贤珍 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾政的妻子</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">性格特点：</span>表面慈善，内心狠辣</p>
+  </div>
+</div>
+
+<style>
+/* 鼠标悬停时显示悬停图片（透明度过渡） */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 添加平滑过渡动画（0.3秒） */
+.main-image,
+.hover-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 可选：禁止主图片响应点击事件（避免干扰悬停效果） */
+.main-image {
+  pointer-events: none;
+}
+</style>
+
+        
+        <!-- 刘姥姥 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/沙玉华.png" 
+      alt="沙玉华饰刘姥姥" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/刘姥姥.png" 
+      alt="沙玉华饰刘姥姥" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      刘姥姥 <span class="text-neutral text-sm font-normal">(沙玉华 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>与贾府有远亲关系</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">性格特点：</span>朴实善良，世故精明</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+        
+        <!-- 焦大 -->
+        <div class="character-card bg-primary/60 rounded-lg overflow-hidden shadow-xl">
+  <div class="relative h-64 overflow-hidden">
+    <!-- 主图片（默认显示） -->
+    <img 
+      src="视频/引导视频图片/孔芮.png" 
+      alt="孔芮饰焦大" 
+      class="w-full h-full object-cover main-image"
+    >
+    <!-- 悬停图片（默认隐藏） -->
+    <img 
+      src="img/焦大.png" 
+      alt="孔芮饰焦大" 
+      class="w-full h-full object-cover hover-image absolute inset-0 opacity-0 transition-opacity duration-300"
+    >
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+    <h3 class="absolute bottom-3 left-3 text-xl font-bold text-secondary">
+      焦大 <span class="text-neutral text-sm font-normal">(孔芮 饰)</span>
+    </h3>
+  </div>
+  <p style="margin-left: 35%;margin-top: 5%;">鼠标悬停查阅人物</p>
+  <div class="p-4 character-info">
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">人物关系：</span>贾府的老仆</p>
+    <p class="mb-2 text-sm"><span class="font-bold text-secondary">性格特点：</span>忠勇豪爽，酒后直言</p>
+  </div>
+</div>
+
+<style>
+/* 当卡片被悬停时，改变图片的透明度实现切换效果 */
+.character-card:hover .hover-image {
+  opacity: 1;
+}
+
+/* 为了增强视觉效果，可以添加一些过渡动画 */
+.character-card .main-image,
+.character-card .hover-image {
+  transition: opacity 0.5s ease-in-out;
+}
+</style>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 关于部分 -->
+  <section id="about" class="py-20 relative">
+    <div class="absolute inset-0 bg-black/70 z-10"></div>
+    <div class="container mx-auto px-4 relative z-20">
+      <h2 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-secondary mb-16 text-center">
+        <span class="inline-block border-b-2 border-secondary pb-2">关于87版《红楼梦》</span>
+      </h2>
+      
+      <div class="bg-primary/60 rounded-lg p-8 shadow-xl">
+        <p class="mb-6 text-lg">
+          87版《红楼梦》是由中国电视剧制作中心与中央电视台联合出品的一部经典古装连续剧，改编自清代作家曹雪芹的同名古典名著。该剧由王扶林执导，周岭、刘耕路、周雷编剧，陈晓旭、欧阳奋强、张莉、邓婕等主演，于1987年首播。
+        </p>
+        
+        <p class="mb-6 text-lg">
+          该剧以贾、史、王、薛四大家族的兴衰为背景，以贾宝玉与林黛玉、薛宝钗的爱情婚姻悲剧为主线，从多个角度描写了18世纪上半叶中国封建社会的生活百态。剧中对人物形象的塑造、对传统文化的展现以及对故事情节的改编都堪称经典，被誉为中国电视剧史上的巅峰之作。
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+          <div class="bg-secondary/20 p-6 rounded-lg">
+            <h3 class="text-xl font-bold text-secondary mb-4">剧集信息</h3>
+            <ul class="space-y-3">
+              <li><span class="font-bold text-secondary">导演：</span>王扶林</li>
+              <li><span class="font-bold text-secondary">编剧：</span>周岭、刘耕路、周雷</li>
+              <li><span class="font-bold text-secondary">主演：</span>陈晓旭、欧阳奋强、张莉、邓婕、李婷等</li>
+              <li><span class="font-bold text-secondary">集数：</span>36集</li>
+              <li><span class="font-bold text-secondary">首播时间：</span>1987年</li>
+              <li><span class="font-bold text-secondary">获奖情况：</span>飞天奖、金鹰奖等多项大奖</li>
+            </ul>
+          </div>
+          
+          <div class="bg-secondary/20 p-6 rounded-lg">
+            <h3 class="text-xl font-bold text-secondary mb-4">经典场景</h3>
+            <h3 class="text-xl font-bold text-secondary mb-4"style="margin-left: 35%;margin-top: -9%;">手机版QQ浏览器腾讯视频影视对应的场景集数</h3>
+            <ul class="space-y-3">
+              <li>黛玉进贾府</li>
+              <li>宝玉挨打</li>
+              <li>黛玉葬花</li>
+              <li>宝玉大婚</li>
+              <li>黛玉焚稿</li>
+              <li>贾府抄家</li>
+              <li>宝玉出家</li>
+            </ul>
+            <ul class="space-y-3"style="margin-left: 27%;margin-top: -37%;">
+              <li><a href=""target="_parent">第1集22:02-26:49处正式进贾府<font size="1">（不同渠道存在差异）</font></a></li>
+              <li><a>第15集开头处<font size="1">（不同渠道存在差异）</font></a></li>
+              <li><a>第12集42:31宝玉出现-44:14处黛玉出现<font size="1">（不同渠道存在差异）</font></a></li>
+              <li><a>第34集03:09-07:37处贾元春薨<font size="1">（不同渠道存在差异）</font></a></li>
+              <li><a>第33集51:46贾薛大婚-54:43处黛玉开始焚稿<font size="1">（不同渠道存在差异）</font></a></li>
+              <li><a>第35集08:02王熙凤的敏觉-17:37贾家关进狱神庙<font size="1">（不同渠道存在差异）</font></a></li>
+              <li><a>第36集大结局<font size="1"></font></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="py-10 relative">
+    <div class="absolute inset-0 bg-black/80 z-10"></div>
+    <div class="container mx-auto px-4 relative z-20">
+      <div class="text-center">
+        <h3 class="text-2xl font-bold text-secondary mb-6">87版《红楼梦》</h3>
+        <p class="mb-8 max-w-2xl mx-auto">
+          重温经典，感受中国古典文学的魅力与精髓
+        </p>
+        
+        <div class="flex justify-center space-x-6 mb-8">
+          <a href="#" class="text-neutral hover:text-secondary transition-colors duration-300 text-2xl">
+            <i class="fa fa-weibo"></i>
+          </a>
+          <a href="#" class="text-neutral hover:text-secondary transition-colors duration-300 text-2xl">
+            <i class="fa fa-wechat"></i>
+          </a>
+          <a href="#" class="text-neutral hover:text-secondary transition-colors duration-300 text-2xl">
+            <i class="fa fa-youtube-play"></i>
+          </a>
+          <a href="#" class="text-neutral hover:text-secondary transition-colors duration-300 text-2xl">
+            <i class="fa fa-instagram"></i>
+          </a>
+        </div>
+        
+        <p class="text-sm text-neutral/70">
+          &copy; 2023 87版《红楼梦》演员表网站 | 本网站仅供学习交流使用
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 返回顶部按钮 -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-secondary">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', function() {
+      // 隐藏加载动画
+      setTimeout(function() {
+        const loader = document.getElementById('loader');
+        loader.style.opacity = '0';
+        setTimeout(function() {
+          loader.style.display = 'none';
+        }, 500);
+      }, 1000);
+      
+      // 背景视频播放
+      const video = document.querySelector('video.bg-video');
+      video.muted = false; // 取消静音
+      
+      // 导航栏滚动效果
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 100) {
+          navbar.classList.add('py-2', 'shadow-lg');
+          navbar.classList.remove('py-3');
+        } else {
+          navbar.classList.add('py-3');
+          navbar.classList.remove('py-2', 'shadow-lg');
+        }
+      });
+      
+      // 移动端菜单
+      const menuToggle = document.getElementById('menu-toggle');
+      const menuClose = document.getElementById('menu-close');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      menuToggle.addEventListener('click', function() {
+        mobileMenu.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // 禁止背景滚动
+      });
+      
+      menuClose.addEventListener('click', function() {
+        mobileMenu.classList.add('hidden');
+        document.body.style.overflow = 'auto'; // 恢复背景滚动
+      });
+      
+      // 关闭移动菜单的链接点击
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = 'auto'; // 恢复背景滚动
+        });
+      });
+      
+      // 返回顶部按钮
+      const backToTopButton = document.getElementById('back-to-top');
+      
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 500) {
+          backToTopButton.classList.remove('opacity-0', 'invisible');
+          backToTopButton.classList.add('opacity-100', 'visible');
+        } else {
+          backToTopButton.classList.add('opacity-0', 'invisible');
+          backToTopButton.classList.remove('opacity-100', 'visible');
+        }
+      });
+      
+      backToTopButton.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+      
+      // 角色卡片悬停动画
+      const characterCards = document.querySelectorAll('.character-card');
+      
+      characterCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          const image = this.querySelector('img');
+          image.style.transform = 'scale(1.1)';
+          image.style.transition = 'transform 0.5s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          const image = this.querySelector('img');
+          image.style.transform = 'scale(1)';
+          image.style.transition = 'transform 0.5s ease';
+        });
+      });
+      
+      // 滚动动画
+      const animateOnScroll = function() {
+        const elements = document.querySelectorAll('.character-card, section h2');
+        
+        elements.forEach(element => {
+          const elementPosition = element.getBoundingClientRect().top;
+          const screenPosition = window.innerHeight / 1.3;
+          
+          if (elementPosition < screenPosition) {
+            element.classList.add('animate-fade-in');
+          }
+        });
+      };
+      
+      // 初始化滚动动画
+      animateOnScroll();
+      
+      // 监听滚动事件
+      window.addEventListener('scroll', animateOnScroll);
+    });
+  </script>
+</body>
+</html>
